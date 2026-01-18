@@ -47,7 +47,10 @@ export const TimetableGrid: React.FC<TimetableGridProps> = ({
           teacher={slot?.teacher}
           room={slot?.room}
           color={slot?.color}
+          conflicts={slot?.conflicts}
+          warnings={slot?.warnings}
           onEdit={() => slot && onSlotEdit?.(slot)}
+          onDoubleClick={() => slot && onSlotEdit?.(slot)}
         />
       </div>
     );
