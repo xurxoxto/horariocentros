@@ -7,7 +7,6 @@ import {
   StudentGroup,
   TimeSlot,
   TimetableConflict,
-  PaginatedResponse,
   ApiResponse
 } from '../types';
 

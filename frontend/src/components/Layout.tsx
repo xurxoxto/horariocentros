@@ -9,7 +9,6 @@ import {
   BookOpenIcon,
   UserGroupIcon,
   AcademicCapIcon,
-  Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   Bars3Icon,
   XMarkIcon,
@@ -25,7 +24,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { theme, setTheme, effectiveTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const location = useLocation();
 
   const navigation = [
