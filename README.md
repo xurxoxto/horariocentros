@@ -35,6 +35,7 @@ A modern, intuitive web application for creating and managing school timetables.
 
 ## 🚀 Quick Start for Localhost
 
+
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn
@@ -244,3 +245,4 @@ Contact xurxoxto@github.com for commercial licensing options.
 ---
 
 Made with ❤️ by xurxoxto
+
