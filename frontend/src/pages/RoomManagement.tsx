@@ -6,7 +6,6 @@ import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 const RoomManagement: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     loadRooms();
@@ -39,7 +38,7 @@ const RoomManagement: React.FC = () => {
           Room Management
         </h1>
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => alert('Add room modal coming soon')}
           className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
         >
           <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
