@@ -1,17 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { HomePage } from './features/HomePage';
-import { LoginPage } from './features/LoginPage';
-import { RegisterPage } from './features/RegisterPage';
 import { DashboardPage } from './features/DashboardPage';
 import { TimetablePage } from './features/TimetablePage';
-import { useThemeStore, useAuthStore } from './store';
-
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { token } = useAuthStore();
-  return token ? <>{children}</> : <Navigate to="/login" />;
-};
+import { ConstraintsPage } from './features/ConstraintsPage';
+import { useThemeStore } from './store';
 
 function App() {
   const { isDark } = useThemeStore();
@@ -29,26 +23,18 @@ function App() {
       <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <Navbar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/timetables"
-            element={
-              <ProtectedRoute>
-                <TimetablePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Login removed: enter the app directly */}
+          <Route path="/" element={<Navigate to="/timetables" replace />} />
+
+          {/* Keep old routes but redirect into the app */}
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/login" element={<Navigate to="/timetables" replace />} />
+          <Route path="/register" element={<Navigate to="/timetables" replace />} />
+
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/timetables" element={<TimetablePage />} />
+          <Route path="/constraints" element={<ConstraintsPage />} />
+          <Route path="*" element={<Navigate to="/timetables" replace />} />
         </Routes>
       </div>
     </Router>

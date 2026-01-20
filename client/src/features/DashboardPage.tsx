@@ -1,50 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Plus, Users, FileText } from 'lucide-react';
-import { useAuthStore } from '../store';
 
 export const DashboardPage: React.FC = () => {
-  const { user } = useAuthStore();
-
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Welcome back, {user?.name}!
+            Bienvenido a HorarioCentros
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Role: <span className="font-semibold capitalize">{user?.role}</span>
-          </p>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Comienza a crear y editar horarios escolares.</p>
         </div>
 
         {/* Quick actions */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <DashboardCard
             icon={<Plus className="w-8 h-8" />}
-            title="Create Timetable"
-            description="Start a new schedule"
+            title="Crear Horario"
+            description="Iniciar nuevo horario"
             link="/timetables/new"
             color="bg-blue-500"
           />
           <DashboardCard
             icon={<Calendar className="w-8 h-8" />}
-            title="View Timetables"
-            description="Browse all schedules"
+            title="Ver Horarios"
+            description="Ver todos los horarios"
             link="/timetables"
             color="bg-green-500"
           />
           <DashboardCard
             icon={<Users className="w-8 h-8" />}
-            title="Manage Teachers"
-            description="Teacher assignments"
+            title="Gestionar Profesores"
+            description="Asignaciones de profesores"
             link="/teachers"
             color="bg-purple-500"
           />
           <DashboardCard
             icon={<FileText className="w-8 h-8" />}
-            title="Export & Reports"
-            description="Generate PDFs"
+            title="Exportar e Informes"
+            description="Generar PDFs"
             link="/reports"
             color="bg-orange-500"
           />
@@ -53,35 +48,33 @@ export const DashboardPage: React.FC = () => {
         {/* Recent activity */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Recent Timetables
+            Horarios Recientes
           </h2>
           <div className="space-y-4">
             <TimetableItem
-              name="Fall 2024 Schedule"
-              lastModified="2 hours ago"
+              name="Horario Otoño 2024"
+              lastModified="hace 2 horas"
               status="active"
             />
             <TimetableItem
-              name="Spring 2024 Schedule"
-              lastModified="1 day ago"
+              name="Horario Primavera 2024"
+              lastModified="hace 1 día"
               status="draft"
             />
             <TimetableItem
-              name="Winter 2023 Schedule"
-              lastModified="3 days ago"
+              name="Horario Invierno 2023"
+              lastModified="hace 3 días"
               status="archived"
             />
           </div>
         </div>
 
         {/* Stats */}
-        {user?.role === 'admin' && (
-          <div className="grid md:grid-cols-3 gap-6 mt-8">
-            <StatCard title="Total Timetables" value="12" change="+2 this month" />
-            <StatCard title="Active Teachers" value="48" change="+3 this month" />
-            <StatCard title="Total Classes" value="156" change="+8 this month" />
-          </div>
-        )}
+        <div className="grid md:grid-cols-3 gap-6 mt-8">
+            <StatCard title="Total Horarios" value="12" change="+2 este mes" />
+            <StatCard title="Profesores Activos" value="48" change="+3 este mes" />
+            <StatCard title="Total Clases" value="156" change="+8 este mes" />
+        </div>
       </div>
     </div>
   );
@@ -114,7 +107,7 @@ const TimetableItem: React.FC<{ name: string; lastModified: string; status: stri
   <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
     <div>
       <h4 className="font-semibold text-gray-900 dark:text-white">{name}</h4>
-      <p className="text-sm text-gray-600 dark:text-gray-400">Modified {lastModified}</p>
+      <p className="text-sm text-gray-600 dark:text-gray-400">Modificado {lastModified}</p>
     </div>
     <span
       className={`px-3 py-1 rounded-full text-xs font-semibold ${

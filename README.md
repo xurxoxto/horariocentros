@@ -1,203 +1,260 @@
-# 🎓 HorarioCentros - Modern School Timetable Manager
+# 🎓 HorarioCentros - Gestor de Horarios Escolares
 
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)
 
-A modern, intuitive web application for creating and managing school timetables. Built with React and Node.js, designed to surpass FET (Free Timetabling Software) with superior UX and advanced features.
+**Aplicación moderna y gratuita para crear y gestionar horarios escolares.**  
+Una alternativa superior a FET con mejor experiencia de usuario, interfaz intuitiva y **mismo sistema completo de restricciones**.
 
-## ✨ Key Features
+## 🚀 Instalación con 1 Click (Recomendado)
 
-### 🎯 Superior UX
-- **Drag-and-Drop Interface**: Intuitive timetable creation and editing
-- **Dark Mode**: Eye-friendly theme switching
-- **Mobile-Responsive**: Works seamlessly on phones, tablets, and desktops
-- **Real-time Collaboration**: Multiple users can work on schedules simultaneously
-
-### 🤖 Smart Scheduling
-- **AI Scheduling Suggestions**: Intelligent recommendations for optimal timetables
-- **Advanced Constraints**: Xade-like constraint system for complex scheduling rules
-- **Conflict Detection**: Automatic detection and resolution suggestions
-- **Optimization Engine**: Minimize gaps and maximize efficiency
-
-### 👥 Role-Based Access
-- **Admin Dashboard**: Full control over schools, teachers, and timetables
-- **Teacher Portal**: View schedules, manage preferences, and availability
-- **Student View**: Access personal timetables and class schedules
-
-### 🔄 Integrations
-- **Calendar Export**: Google Calendar, iCal, Outlook integration
-- **PDF Export**: Professional timetable printing and sharing
-- **Import/Export**: Compatible with common timetable formats
-
-### 🔒 Security & Collaboration
-- **Real-time Sync**: WebSocket-based live updates
-- **Role-based Permissions**: Granular access control
-- **Audit Logs**: Track all changes and modifications
-
-## 🚀 Quick Start for Localhost
-
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- PostgreSQL (optional, SQLite for dev)
-
-### Automated Setup (Recommended)
-
-**Linux/macOS:**
-```bash
-# Clone the repository
-git clone https://github.com/xurxoxto/horariocentros.git
-cd horariocentros
-
-# Run automated setup
-chmod +x setup.sh
-./setup.sh
-
-# Start the application
-npm run dev
-```
+### Descargar Instalador
 
 **Windows:**
-```bash
-# Clone the repository
-git clone https://github.com/xurxoxto/horariocentros.git
-cd horariocentros
+- Descarga: `HorarioCentros-Setup-1.0.0.exe` (instalador)
+- O: `HorarioCentros-1.0.0-portable.exe` (portátil, sin instalación)
+- Doble click → Siguiente → Listo
 
-# Run automated setup
-setup.bat
+**Mac:**
+- Descarga: `HorarioCentros-1.0.0.dmg`
+- Arrastra a Aplicaciones → Doble click
 
-# Start the application
-npm run dev
-```
+**Linux:**
+- Descarga: `HorarioCentros-1.0.0.AppImage`
+- `chmod +x HorarioCentros-1.0.0.AppImage`
+- `./HorarioCentros-1.0.0.AppImage`
 
-### Using Docker (Alternative)
-
-```bash
-# Start with Docker Compose
-docker-compose up
-
-# Access the app
-# Frontend: http://localhost:5173
-# Backend: http://localhost:3000
-```
-
-### Manual Setup
+### Compilar Instaladores (Desarrolladores)
 
 ```bash
-# Clone the repository
-git clone https://github.com/xurxoxto/horariocentros.git
-cd horariocentros
-
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your configuration
+# Compilar para tu sistema operativo
+npm run electron:build
 
-# Run development server
+# O para todos los sistemas:
+npm run package
+```
+
+Los instaladores se generan en la carpeta `dist-electron/`
+
+## 📥 Instalación Manual (Desarrollo)
+
+Si prefieres ejecutar desde código fuente:
+
+### Requisitos Previos
+
+- **Node.js 18 o superior** ([Descargar aquí](https://nodejs.org/))
+- **npm** (incluido con Node.js)
+
+### Instalación Rápida (Windows, Mac, Linux)
+
+**1. Descargar o clonar el proyecto:**
+
+```bash
+git clone https://github.com/xurxoxto/horariocentros.git
+cd horariocentros
+```
+
+**2. Ejecutar script de instalación automática:**
+
+**En Windows:**
+```bash
+setup.bat
+```
+
+**En Mac/Linux:**
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+**3. Iniciar la aplicación:**
+
+```bash
 npm run dev
 ```
 
-The application will be available at:
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:3000
+La aplicación estará disponible en:
+- **Frontend**: http://localhost:5173
+- **API Backend**: http://localhost:3000
 
-📖 **For detailed setup guides:**
-- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick 2-minute guide
-- **[LOCALHOST_SETUP.md](LOCALHOST_SETUP.md)** - Comprehensive setup
-- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Fix common issues
+## 🚀 Uso Diario
 
-### Production Build
+### Iniciar el sistema
 
 ```bash
-# Build both client and server
-npm run build
-
-# Start production server
-npm start
+npm run dev
 ```
 
-## 🏗️ Architecture
+### Acceder desde otros ordenadores de la red local
+
+1. Encuentra la IP de tu ordenador:
+   - **Windows**: `ipconfig` → busca "IPv4"
+   - **Mac/Linux**: `ifconfig` → busca "inet"
+
+2. Otros ordenadores acceden con: `http://[IP]:5173`  
+   Ejemplo: `http://192.168.1.100:5173`
+
+### Detener el sistema
+
+Presiona `Ctrl+C` en la terminal donde ejecutaste `npm run dev`
+
+## ✨ Características Principales
+
+- ✅ **Instalación con 1 click**: Ejecutable standalone como FET
+- ✅ **Sin login**: Todo el personal del centro accede directamente
+- ✅ **100% offline**: Funciona sin internet, datos locales
+- ✅ **Sistema completo de restricciones FET**: Todas las restricciones de tiempo, profesores, estudiantes, aulas, actividades
+- ✅ **Arrastrar y soltar**: Interfaz intuitiva para crear horarios
+- ✅ **Generación automática**: Motor de optimización con algoritmos genéticos
+- ✅ **Modo oscuro**: Tema claro/oscuro automático
+- ✅ **Responsive**: Funciona en móvil, tablet y PC
+- ✅ **Detección de conflictos**: Avisos automáticos de solapamientos
+- ✅ **Exportar PDF/iCal**: Descarga e imprime horarios
+- ✅ **Multiplataforma**: Windows, macOS, Linux
+
+## 🎯 Sistema de Restricciones (Compatible FET)
+
+HorarioCentros incluye el **mismo sistema completo de restricciones** que FET:
+
+### Restricciones de Tiempo
+- ✅ Horario básico (días/horas por semana)
+- ✅ Franjas horarias no disponibles
+- ✅ Horarios preferidos de inicio
+- ✅ Descansos/recreos obligatorios
+
+### Restricciones de Profesores
+- ✅ Máximo de horas diarias
+- ✅ Máximo de horas consecutivas
+- ✅ Mínimo de horas diarias
+- ✅ Máximo de huecos por día/semana
+- ✅ Máximo de días trabajados por semana
+- ✅ Franjas no disponibles
+- ✅ Máximo de cambios de edificio
+
+### Restricciones de Estudiantes/Grupos
+- ✅ Máximo de horas diarias
+- ✅ Máximo de horas consecutivas
+- ✅ Mínimo de horas diarias
+- ✅ Máximo de huecos por día/semana
+- ✅ Hora máxima de inicio (no empezar antes de X)
+- ✅ Tardes libres
+- ✅ Máximo de cambios de edificio
+
+### Restricciones de Actividades
+- ✅ Horarios preferidos de inicio
+- ✅ Días preferidos
+- ✅ Actividades en el mismo horario
+- ✅ Actividades consecutivas
+- ✅ Actividades no solapadas
+- ✅ Días mínimos/máximos entre actividades
+- ✅ Actividades agrupadas
+
+### Restricciones de Aulas
+- ✅ Aulas no disponibles
+- ✅ Aula preferida por actividad
+- ✅ Lista de aulas preferidas
+
+### Pesos de Restricciones
+Cada restricción tiene un peso (0-100%):
+- **Obligatoria** (100%): Debe cumplirse siempre
+- **Importante** (80-95%): Muy deseable
+- **Preferida** (50-79%): Deseable
+- **Opcional** (<50%): Si es posible
+
+## 📁 Estructura del Proyecto
 
 ```
 horariocentros/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── features/       # Feature-based modules
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── services/       # API services
-│   │   ├── store/          # State management
-│   │   ├── styles/         # Global styles
-│   │   └── utils/          # Utility functions
-│   └── package.json
-├── server/                 # Node.js backend
-│   ├── src/
-│   │   ├── controllers/    # Route controllers
-│   │   ├── models/         # Data models
-│   │   ├── routes/         # API routes
-│   │   ├── services/       # Business logic
-│   │   ├── middleware/     # Express middleware
-│   │   └── utils/          # Utility functions
-│   └── package.json
-└── package.json            # Root package.json
+├── client/          # Interfaz web (React + TypeScript)
+├── server/          # API backend (Node.js + Express)
+├── setup.bat        # Instalador automático Windows
+├── setup.sh         # Instalador automático Mac/Linux
+└── package.json     # Configuración del proyecto
 ```
 
-## 🛠️ Technology Stack
-
-### Frontend
-- **React 18**: Modern UI library
-- **TypeScript**: Type-safe development
-- **Vite**: Fast build tool
-- **React Router**: Client-side routing
-- **Zustand**: Lightweight state management
-- **React DnD**: Drag-and-drop functionality
-- **Tailwind CSS**: Utility-first CSS framework
-- **Socket.io Client**: Real-time communication
-
-### Backend
-- **Node.js & Express**: RESTful API server
-- **TypeScript**: Type-safe backend
-- **Socket.io**: WebSocket server
-- **Prisma**: Database ORM
-- **JWT**: Authentication
-- **PDFKit**: PDF generation
-- **Node-cron**: Scheduled tasks
-
-## 📚 API Documentation
-
-API documentation is available at `/api/docs` when running the server.
-
-## 🧪 Testing
+## 🔧 Comandos Útiles
 
 ```bash
-# Run all tests
+# Desarrollo (con recarga automática)
+npm run dev
+
+# Construir versión de producción
+npm run build
+
+# Iniciar versión de producción
+npm start
+
+# Ejecutar tests
 npm test
-
-# Run server tests
-npm run server:test
-
-# Run client tests
-npm run client:test
 ```
 
-## 🤝 Contributing
+## 💾 Datos y Backup
 
-Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) first.
+Los datos se almacenan localmente en:
+- **Base de datos**: `server/dev.db` (SQLite)
+- **Configuración**: archivos `.env`
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+**Para hacer backup:**
+1. Copia la carpeta completa `horariocentros/`
+2. O solo `server/dev.db` si quieres guardar los horarios
 
-## 📄 License
+## 🛠️ Solución de Problemas
 
-This project is dual-licensed:
+### El puerto 5173 o 3000 ya está en uso
 
-- **AGPLv3**: Free for open-source projects. See [LICENSE](LICENSE) file.
-- **Commercial License**: For proprietary/commercial use without AGPLv3 restrictions.
+Cierra otras aplicaciones que los usen o cambia los puertos en los archivos `.env`:
+
+```env
+# server/.env
+PORT=3001
+
+# client/.env
+VITE_API_URL=http://localhost:3001/api
+```
+
+### Error "Node.js no encontrado"
+
+Instala Node.js desde: https://nodejs.org/
+
+### Error al instalar dependencias
+
+```bash
+# Limpia e reinstala
+rm -rf node_modules package-lock.json
+rm -rf client/node_modules client/package-lock.json
+rm -rf server/node_modules server/package-lock.json
+npm install
+```
+
+## 📖 Documentación Adicional
+
+- [QUICKSTART.md](QUICKSTART.md) - Guía rápida de 5 minutos
+- [GETTING_STARTED.md](GETTING_STARTED.md) - Tutorial completo
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Soluciones a problemas comunes
+
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Lee [CONTRIBUTING.md](CONTRIBUTING.md) para empezar.
+
+## 📄 Licencia
+
+Este proyecto tiene doble licencia:
+
+- **AGPLv3**: Uso gratuito para centros educativos y proyectos open source
+- **Licencia Comercial**: Para uso comercial sin restricciones AGPL
+
+Ver [LICENSE](LICENSE) para más detalles.
+
+## 💬 Soporte
+
+- **Issues**: [GitHub Issues](https://github.com/xurxoxto/horariocentros/issues)
+- **Documentación**: Carpeta `docs/`
+
+---
+
+**Hecho con ❤️ para la comunidad educativa**
 
 Contact xurxoxto@github.com for commercial licensing options.
 
