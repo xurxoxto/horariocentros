@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Download, Share2, Users as UsersIcon, Undo, Redo, Filter } from 'lucide-react';
+import { Download, Share2, Users as UsersIcon, Undo, Redo } from 'lucide-react';
 import { TimetableGrid } from '../components/TimetableGrid';
 import { ResourcePanel } from '../components/ResourcePanel';
 import { ViewSwitcher, ViewType } from '../components/ViewSwitcher';
@@ -132,11 +132,6 @@ export const TimetablePage: React.FC = () => {
   };
 
   const handleSlotEdit = (slot: any) => {
-    setEditingSlot(slot);
-    setShowEditModal(true);
-  };
-
-  const handleSlotDoubleClick = (slot: any) => {
     setEditingSlot(slot);
     setShowEditModal(true);
   };

@@ -132,7 +132,7 @@ export const ResourcePanel: React.FC<ResourcePanelProps> = ({
   classes = [],
   rooms = [],
   subjects = [],
-  onResourceSelect,
+  onResourceSelect: _onResourceSelect,
 }) => {
   const [teacherSearch, setTeacherSearch] = useState('');
   const [classSearch, setClassSearch] = useState('');
