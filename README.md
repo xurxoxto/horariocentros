@@ -33,14 +33,54 @@ A modern, intuitive web application for creating and managing school timetables.
 - **Role-based Permissions**: Granular access control
 - **Audit Logs**: Track all changes and modifications
 
-## 🚀 Quick Start
+## 🚀 Quick Start for Localhost
 
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn
 - PostgreSQL (optional, SQLite for dev)
 
-### Installation
+### Automated Setup (Recommended)
+
+**Linux/macOS:**
+```bash
+# Clone the repository
+git clone https://github.com/xurxoxto/horariocentros.git
+cd horariocentros
+
+# Run automated setup
+chmod +x setup.sh
+./setup.sh
+
+# Start the application
+npm run dev
+```
+
+**Windows:**
+```bash
+# Clone the repository
+git clone https://github.com/xurxoxto/horariocentros.git
+cd horariocentros
+
+# Run automated setup
+setup.bat
+
+# Start the application
+npm run dev
+```
+
+### Using Docker (Alternative)
+
+```bash
+# Start with Docker Compose
+docker-compose up
+
+# Access the app
+# Frontend: http://localhost:5173
+# Backend: http://localhost:3000
+```
+
+### Manual Setup
 
 ```bash
 # Clone the repository
@@ -61,6 +101,8 @@ npm run dev
 The application will be available at:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
+
+📖 **For detailed localhost setup guide, see [LOCALHOST_SETUP.md](LOCALHOST_SETUP.md)**
 
 ### Production Build
 
