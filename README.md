@@ -102,7 +102,10 @@ The application will be available at:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3000
 
-📖 **For detailed localhost setup guide, see [LOCALHOST_SETUP.md](LOCALHOST_SETUP.md)**
+📖 **For detailed setup guides:**
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Quick 2-minute guide
+- **[LOCALHOST_SETUP.md](LOCALHOST_SETUP.md)** - Comprehensive setup
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Fix common issues
 
 ### Production Build
 
