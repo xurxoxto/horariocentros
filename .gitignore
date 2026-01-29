@@ -1,3 +1,14 @@
+### Python
+venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+
 ### Dependencies
 node_modules/
 **/node_modules/
