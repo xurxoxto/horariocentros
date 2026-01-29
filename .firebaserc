@@ -1,0 +1,15 @@
+# Backend - no subir a hosting
+backend/
+venv/
+*.pyc
+__pycache__/
+*.db
+.env
+
+# Node
+node_modules/
+.npm
+
+# Build artifacts que no son dist
+frontend/src/
+frontend/public/
