@@ -1,0 +1,88 @@
+{
+  "name": "horariocentros",
+  "version": "1.0.0",
+  "description": "Modern school timetable web application with React and Node.js",
+  "main": "electron-main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm run dev",
+    "build": "npm run server:build && npm run client:build",
+    "server:build": "cd server && npm run build",
+    "client:build": "cd client && npm run build",
+    "start": "npm run server:start",
+    "server:start": "cd server && npm start",
+    "test": "npm run server:test && npm run client:test",
+    "server:test": "cd server && npm test",
+    "client:test": "cd client && npm test",
+    "postinstall": "cd server && npm install && cd ../client && npm install",
+    "electron": "electron .",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build:win": "npm run build && electron-builder --win",
+    "electron:build:mac": "npm run build && electron-builder --mac",
+    "electron:build:linux": "npm run build && electron-builder --linux",
+    "package": "npm run build && electron-builder --win --mac --linux"
+  },
+  "keywords": [
+    "timetable",
+    "school",
+    "scheduling",
+    "education",
+    "react",
+    "nodejs"
+  ],
+  "author": {
+    "name": "xurxoxto",
+    "email": "xurxoxto@example.com"
+  },
+  "license": "AGPL-3.0",
+  "build": {
+    "appId": "com.horariocentros.app",
+    "productName": "HorarioCentros",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron-main.js",
+      "client/dist/**/*",
+      "server/dist/**/*",
+      "server/node_modules/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.education"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png",
+      "category": "Education"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}
