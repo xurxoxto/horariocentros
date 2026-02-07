@@ -9,6 +9,7 @@ import { AssignmentsPage } from './pages/AssignmentsPage';
 import { ConstraintsPage } from './pages/ConstraintsPage';
 import { TimetablePage } from './pages/TimetablePage';
 import { ReportsPage } from './pages/ReportsPage';
+import { XadePage } from './pages/XadePage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/constraints" element={<ConstraintsPage />} />
           <Route path="/timetable" element={<TimetablePage />} />
           <Route path="/reports" element={<ReportsPage />} />
+          <Route path="/xade" element={<XadePage />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

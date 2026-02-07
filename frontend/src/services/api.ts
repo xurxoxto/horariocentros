@@ -7,6 +7,10 @@ import type {
   SubjectAssignment,
   Schedule,
   HealthResponse,
+  XadeImportPreview,
+  XadeImportConfirmResult,
+  XadeExportPreview,
+  XadeInfo,
 } from '../types';
 
 const API_BASE_URL = '/api';
@@ -111,3 +115,71 @@ export const getSchedules = (): Promise<Schedule[]> => fetchAPI('/schedules');
 export const getSchedule = (id: string): Promise<Schedule> => fetchAPI(`/schedules/${id}`);
 export const deleteSchedule = (id: string): Promise<void> =>
   fetchAPI(`/schedules/${id}`, { method: 'DELETE' });
+
+// XADE Integration
+export const getXadeInfo = (): Promise<XadeInfo> => fetchAPI('/xade/info');
+
+export const previewXadeImport = async (files: File[]): Promise<XadeImportPreview> => {
+  const formData = new FormData();
+  files.forEach((file) => formData.append('files', file));
+
+  const response = await fetch(`${API_BASE_URL}/xade/import/preview`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Erro descoñecido' }));
+    throw new Error(error.detail || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+};
+
+export const confirmXadeImport = async (files: File[]): Promise<XadeImportConfirmResult> => {
+  const formData = new FormData();
+  files.forEach((file) => formData.append('files', file));
+
+  const response = await fetch(`${API_BASE_URL}/xade/import/confirm`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Erro descoñecido' }));
+    throw new Error(error.detail || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+};
+
+export const previewXadeExport = (scheduleId?: string): Promise<XadeExportPreview> =>
+  fetchAPI(`/xade/export/preview${scheduleId ? `?schedule_id=${scheduleId}` : ''}`);
+
+export const downloadXadeExport = async (
+  format: 'zip' | 'unified' = 'zip',
+  language: 'gl' | 'es' = 'gl',
+  scheduleId?: string
+): Promise<void> => {
+  const params = new URLSearchParams({ format, language });
+  if (scheduleId) params.append('schedule_id', scheduleId);
+
+  const response = await fetch(`${API_BASE_URL}/xade/export/csv?${params.toString()}`);
+  
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ detail: 'Erro descoñecido' }));
+    throw new Error(error.detail || `HTTP ${response.status}`);
+  }
+
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = format === 'zip'
+    ? `horarios_xade_${new Date().toISOString().slice(0, 10)}.zip`
+    : `horario_xade_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  a.remove();
+};

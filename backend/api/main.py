@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from datetime import datetime
 
-from backend.api.routes import teachers, schedules, entities
+from backend.api.routes import teachers, schedules, entities, xade
 from backend.api.schemas import HealthResponse, EntityCountsResponse
 from backend.api.store import store
 
@@ -42,6 +42,7 @@ app.include_router(entities.rooms_router, prefix="/api/rooms", tags=["Rooms"])
 app.include_router(entities.time_slots_router, prefix="/api/time-slots", tags=["TimeSlots"])
 app.include_router(entities.assignments_router, prefix="/api/assignments", tags=["Assignments"])
 app.include_router(schedules.router, prefix="/api/schedules", tags=["Schedules"])
+app.include_router(xade.router, prefix="/api/xade", tags=["XADE"])
 
 
 # ============================================================================

@@ -40,6 +40,13 @@ const navigation: NavSection[] = [
       { name: 'Reportes', path: '/reports', icon: '📊' },
     ],
   },
+  {
+    title: 'Integracións',
+    icon: '🔗',
+    items: [
+      { name: 'XADE', path: '/xade', icon: '🏛️' },
+    ],
+  },
 ];
 
 export const Sidebar: React.FC = () => {

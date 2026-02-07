@@ -109,3 +109,101 @@ export interface HealthResponse {
   database_connected: boolean;
   entities: EntityCounts;
 }
+
+// XADE Integration Types
+export interface XadeImportPreview {
+  status: string;
+  data: {
+    teachers: XadeTeacherData[];
+    subjects: XadeSubjectData[];
+    groups: XadeGroupData[];
+    rooms: XadeRoomData[];
+    courses: XadeCourseData[];
+    time_slots: XadeTimeSlotData[];
+    assignments: XadeAssignmentData[];
+  };
+  summary: Record<string, number>;
+  files_processed: string[];
+  warnings: string[];
+  errors: string[];
+}
+
+export interface XadeTeacherData {
+  xade_code: string;
+  name: string;
+  department: string;
+}
+
+export interface XadeSubjectData {
+  xade_code: string;
+  name: string;
+  hours_per_week: number;
+  course: string;
+}
+
+export interface XadeGroupData {
+  xade_code: string;
+  name: string;
+  course: string;
+  level: string;
+  num_students: number;
+  shift: string;
+}
+
+export interface XadeRoomData {
+  xade_code: string;
+  name: string;
+  capacity: number;
+  room_type: string;
+}
+
+export interface XadeCourseData {
+  xade_code: string;
+  name: string;
+  level: string;
+}
+
+export interface XadeTimeSlotData {
+  day: number;
+  day_name: string;
+  start_hour: number;
+  start_minute: number;
+  duration_minutes: number;
+  session_name: string;
+}
+
+export interface XadeAssignmentData {
+  teacher_name: string;
+  subject_name: string;
+  group_name: string;
+}
+
+export interface XadeImportConfirmResult {
+  status: string;
+  created: Record<string, number>;
+  skipped: Record<string, number>;
+  warnings: string[];
+  errors: string[];
+  summary: {
+    total_created: number;
+    total_skipped: number;
+  };
+}
+
+export interface XadeExportPreview {
+  status: string;
+  message?: string;
+  schedule_id?: string;
+  total_lessons?: number;
+  groups?: string[];
+  lessons_per_group?: Record<string, number>;
+  entities?: Record<string, number>;
+}
+
+export interface XadeInfo {
+  name: string;
+  description: string;
+  workflow: string[];
+  import_formats: Record<string, unknown>;
+  export_formats: Record<string, string>;
+}
