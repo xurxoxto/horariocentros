@@ -8,7 +8,7 @@ export const CodocenciaPage: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
-  const [assignments, setAssignments] = useState<SubjectAssignment[]>([]);
+  const [, setAssignments] = useState<SubjectAssignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

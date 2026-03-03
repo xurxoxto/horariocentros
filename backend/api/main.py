@@ -5,14 +5,21 @@ Punto de entrada del servidor REST.
 Ahora usa SQLite + SQLAlchemy para persistencia (Phase 3).
 """
 
+import os
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 
 from backend.api.routes import teachers, schedules, entities, xade
 from backend.api.schemas import HealthResponse, EntityCountsResponse
 from backend.api.store import store
+
+# Ruta al directorio de archivos estáticos del frontend
+FRONTEND_DIR = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
 
 
 # Crear app
@@ -49,9 +56,9 @@ app.include_router(xade.router, prefix="/api/xade", tags=["XADE"])
 # RUTAS GENERALES
 # ============================================================================
 
-@app.get("/", tags=["General"])
-async def root():
-    """Raíz de la API."""
+@app.get("/api/info", tags=["General"])
+async def api_info():
+    """Información de la API."""
     return {
         "message": "Sistema de Generación Automática de Horarios",
         "version": "0.2.0",
@@ -97,19 +104,6 @@ async def get_stats():
 # MANEJO DE ERRORES
 # ============================================================================
 
-@app.exception_handler(404)
-async def not_found_handler(request, exc):
-    """Manejador para rutas no encontradas."""
-    return JSONResponse(
-        status_code=404,
-        content={
-            "error": "not_found",
-            "message": f"La ruta {request.url.path} no existe",
-            "docs": "/docs"
-        }
-    )
-
-
 @app.exception_handler(500)
 async def internal_error_handler(request, exc):
     """Manejador para errores internos."""
@@ -120,6 +114,44 @@ async def internal_error_handler(request, exc):
             "message": "Ocurrió un error interno en el servidor"
         }
     )
+
+
+# ============================================================================
+# SERVIR FRONTEND (archivos estáticos construidos con Vite)
+# ============================================================================
+
+if FRONTEND_DIR.exists():
+    # Montar archivos estáticos (CSS, JS, imágenes)
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="static-assets")
+
+    @app.get("/", include_in_schema=False)
+    async def serve_root():
+        """Servir index.html en la raíz."""
+        return FileResponse(FRONTEND_DIR / "index.html")
+
+    @app.get("/{full_path:path}", include_in_schema=False)
+    async def serve_frontend(full_path: str):
+        """Servir la aplicación frontend (SPA fallback)."""
+        # No interceptar rutas de la API
+        if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("redoc") or full_path.startswith("openapi.json") or full_path == "health":
+            return JSONResponse(status_code=404, content={"error": "not_found"})
+        # Intentar servir el archivo estático directamente
+        file_path = FRONTEND_DIR / full_path
+        if full_path and file_path.exists() and file_path.is_file():
+            return FileResponse(file_path)
+        # Para cualquier otra ruta, devolver index.html (SPA routing)
+        return FileResponse(FRONTEND_DIR / "index.html")
+
+else:
+    @app.get("/", tags=["General"])
+    async def root_no_frontend():
+        """Raíz sin frontend construido."""
+        return {
+            "message": "Sistema de Generación Automática de Horarios",
+            "version": "0.2.0",
+            "docs": "/docs",
+            "note": "Frontend no construido. Ejecuta ./build.sh para construirlo."
+        }
 
 
 if __name__ == "__main__":
