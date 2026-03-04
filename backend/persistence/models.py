@@ -194,6 +194,28 @@ class Lesson(Base):
         return f"<Lesson {self.id} - {self.teacher_id}:{self.subject_id}:{self.group_id}>"
 
 
+class CenterConfig(Base):
+    """Persistent Center Configuration model - stores school schedule (jornada) settings."""
+    __tablename__ = "center_config"
+    
+    id = Column(GUID(), primary_key=True, default=uuid.uuid4)
+    center_name = Column(String(255), nullable=False, default="Mi Centro")
+    academic_year = Column(String(20), nullable=False, default="2025-2026")
+    schedule_type = Column(String(20), nullable=False, default="continua")  # continua, partida
+    education_levels = Column(String(500), nullable=False, default="infantil,primaria,eso,bachillerato")
+    periods_per_day = Column(Integer, nullable=False, default=6)
+    days_per_week = Column(Integer, nullable=False, default=5)
+    total_weekly_hours = Column(Integer, nullable=False, default=30)
+    teaching_hours_per_week = Column(Integer, nullable=False, default=25)
+    periods_config = Column(String(5000), nullable=False, default="[]")  # JSON: [{number, start_time, end_time, duration_minutes}]
+    breaks_config = Column(String(2000), nullable=False, default="[]")  # JSON: [{after_period, start_time, end_time, name}]
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f"<CenterConfig {self.id} - {self.center_name}>"
+
+
 class Schedule(Base):
     """Persistent Schedule model - represents a complete generated schedule."""
     __tablename__ = "schedules"

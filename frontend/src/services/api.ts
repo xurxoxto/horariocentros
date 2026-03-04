@@ -11,6 +11,7 @@ import type {
   XadeImportConfirmResult,
   XadeExportPreview,
   XadeInfo,
+  CenterConfig,
 } from '../types';
 
 const API_BASE_URL = '/api';
@@ -118,6 +119,11 @@ export const deleteSchedule = (id: string): Promise<void> =>
 
 // XADE Integration
 export const getXadeInfo = (): Promise<XadeInfo> => fetchAPI('/xade/info');
+
+// Center Settings
+export const getCenterConfig = (): Promise<CenterConfig> => fetchAPI('/settings/center');
+export const updateCenterConfig = (config: Partial<CenterConfig>): Promise<CenterConfig> =>
+  fetchAPI('/settings/center', { method: 'PUT', body: JSON.stringify(config) });
 
 export const previewXadeImport = async (files: File[]): Promise<XadeImportPreview> => {
   const formData = new FormData();

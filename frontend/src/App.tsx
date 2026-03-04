@@ -10,6 +10,7 @@ import { ConstraintsPage } from './pages/ConstraintsPage';
 import { TimetablePage } from './pages/TimetablePage';
 import { ReportsPage } from './pages/ReportsPage';
 import { XadePage } from './pages/XadePage';
+import { CenterSettingsPage } from './pages/CenterSettingsPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <AppLayout>
         <Routes>
           <Route path="/" element={<DashboardPage />} />
+          <Route path="/center-settings" element={<CenterSettingsPage />} />
           <Route path="/teachers" element={<TeachersPage />} />
           <Route path="/subjects" element={<SubjectsPage />} />
           <Route path="/groups" element={<GroupsPage />} />

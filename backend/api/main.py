@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse, FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from datetime import datetime
 
-from backend.api.routes import teachers, schedules, entities, xade
+from backend.api.routes import teachers, schedules, entities, xade, settings
 from backend.api.schemas import HealthResponse, EntityCountsResponse
 from backend.api.store import store
 
@@ -50,6 +50,7 @@ app.include_router(entities.time_slots_router, prefix="/api/time-slots", tags=["
 app.include_router(entities.assignments_router, prefix="/api/assignments", tags=["Assignments"])
 app.include_router(schedules.router, prefix="/api/schedules", tags=["Schedules"])
 app.include_router(xade.router, prefix="/api/xade", tags=["XADE"])
+app.include_router(settings.router, prefix="/api/settings", tags=["Settings"])
 
 
 # ============================================================================

@@ -1,75 +1,21 @@
-LICENCIA PROPIETARIA - HorarioCentros
-=====================================
+MIT License
 
 Copyright (c) 2026 Jorge García García
-Todos los derechos reservados.
 
-TÉRMINOS Y CONDICIONES DE USO
------------------------------
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-1. PROPIEDAD INTELECTUAL
-   Este software, incluyendo pero no limitado a su código fuente, documentación,
-   diseño, arquitectura y todos los materiales asociados, es propiedad exclusiva
-   de Jorge García García.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-2. RESTRICCIONES DE USO
-   Queda PROHIBIDO sin autorización previa por escrito del autor:
-   
-   a) Usar este software con fines comerciales
-   b) Copiar, modificar o distribuir el código fuente
-   c) Crear trabajos derivados basados en este software
-   d) Sublicenciar, vender o transferir el software a terceros
-   e) Usar el software en entornos de producción
-   f) Descompilar, realizar ingeniería inversa o desensamblar el software
-
-3. USO ACADÉMICO Y DE EVALUACIÓN
-   Se permite el uso limitado para fines de evaluación y estudio personal,
-   siempre que:
-   
-   a) Se cite apropiadamente al autor: "Jorge García García"
-   b) Se incluya un enlace o referencia a este repositorio original
-   c) No se eliminen ni modifiquen los avisos de copyright
-   d) El uso no sea comercial ni genere beneficio económico
-
-4. LICENCIA COMERCIAL
-   Para obtener una licencia comercial que permita:
-   - Uso en producción
-   - Modificación del código
-   - Distribución
-   - Integración en productos comerciales
-   
-   Contactar con el autor para negociar términos y tarifas.
-
-5. CITACIÓN REQUERIDA
-   Cualquier uso permitido de este software debe incluir la siguiente citación:
-   
-   "HorarioCentros - Sistema de Generación de Horarios Escolares
-    Desarrollado por Jorge García García (2026)"
-
-6. EXENCIÓN DE GARANTÍAS
-   ESTE SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO,
-   EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A LAS GARANTÍAS DE
-   COMERCIABILIDAD, IDONEIDAD PARA UN PROPÓSITO PARTICULAR Y NO INFRACCIÓN.
-
-7. LIMITACIÓN DE RESPONSABILIDAD
-   EN NINGÚN CASO EL AUTOR SERÁ RESPONSABLE DE NINGÚN RECLAMO, DAÑO U OTRA
-   RESPONSABILIDAD, YA SEA EN UNA ACCIÓN DE CONTRATO, AGRAVIO O DE OTRO MODO,
-   QUE SURJA DE O EN CONEXIÓN CON EL SOFTWARE O EL USO U OTROS TRATOS EN
-   EL SOFTWARE.
-
-8. TERMINACIÓN
-   Esta licencia se termina automáticamente si usted incumple cualquiera de
-   sus términos. Tras la terminación, debe destruir todas las copias del
-   software en su posesión.
-
-9. LEY APLICABLE
-   Esta licencia se rige por las leyes de España. Cualquier disputa será
-   sometida a los tribunales competentes de España.
-
----
-
-Para solicitar permisos o licencias comerciales:
-Contacto: Jorge García García
-
-Fecha: Enero 2026
-Versión de la licencia: 1.0
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

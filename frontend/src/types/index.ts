@@ -207,3 +207,33 @@ export interface XadeInfo {
   import_formats: Record<string, unknown>;
   export_formats: Record<string, string>;
 }
+
+// Center Configuration Types
+export interface PeriodConfig {
+  number: number;
+  start_time: string;
+  end_time: string;
+  duration_minutes: number;
+}
+
+export interface BreakConfig {
+  after_period: number;
+  start_time: string;
+  end_time: string;
+  name: string;
+}
+
+export interface CenterConfig {
+  id: string;
+  center_name: string;
+  academic_year: string;
+  schedule_type: 'continua' | 'partida';
+  education_levels: string[];
+  periods_per_day: number;
+  days_per_week: number;
+  total_weekly_hours: number;
+  teaching_hours_per_week: number;
+  periods: PeriodConfig[];
+  breaks: BreakConfig[];
+  created_at?: string;
+}

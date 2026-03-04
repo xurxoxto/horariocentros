@@ -6,6 +6,15 @@ import { Card, Button, EmptyState, Badge } from '../components/ui';
 import type { Group } from '../types';
 
 const LEVEL_OPTIONS = [
+  { value: 'EI3', label: 'Ed. Infantil 3 años' },
+  { value: 'EI4', label: 'Ed. Infantil 4 años' },
+  { value: 'EI5', label: 'Ed. Infantil 5 años' },
+  { value: 'EP1', label: '1º Primaria' },
+  { value: 'EP2', label: '2º Primaria' },
+  { value: 'EP3', label: '3º Primaria' },
+  { value: 'EP4', label: '4º Primaria' },
+  { value: 'EP5', label: '5º Primaria' },
+  { value: 'EP6', label: '6º Primaria' },
   { value: 'ESO1', label: '1º ESO' },
   { value: 'ESO2', label: '2º ESO' },
   { value: 'ESO3', label: '3º ESO' },
@@ -19,6 +28,15 @@ const LEVEL_OPTIONS = [
 ];
 
 const LEVEL_COLORS: Record<string, string> = {
+  EI3: 'from-pink-300 to-pink-400',
+  EI4: 'from-pink-400 to-pink-500',
+  EI5: 'from-pink-500 to-pink-600',
+  EP1: 'from-orange-300 to-orange-400',
+  EP2: 'from-orange-400 to-orange-500',
+  EP3: 'from-orange-500 to-orange-600',
+  EP4: 'from-amber-400 to-amber-500',
+  EP5: 'from-amber-500 to-amber-600',
+  EP6: 'from-amber-600 to-amber-700',
   ESO1: 'from-blue-400 to-blue-500',
   ESO2: 'from-blue-500 to-blue-600',
   ESO3: 'from-blue-600 to-blue-700',

@@ -5,7 +5,7 @@ Define la estructura de request/response para la API REST.
 """
 
 from pydantic import BaseModel, Field, validator
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from uuid import UUID
 from datetime import datetime
 from enum import Enum
@@ -192,6 +192,59 @@ class SubjectAssignmentCreate(BaseModel):
 class SubjectAssignmentResponse(SubjectAssignmentCreate):
     """Schema para respuesta de asignación."""
     id: UUID
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+# ============================================================================
+# SCHEMAS DE CONFIGURACIÓN DEL CENTRO
+# ============================================================================
+
+class PeriodConfig(BaseModel):
+    """Schema para configuración de un periodo lectivo."""
+    number: int = Field(..., ge=1, description="Número de periodo (1-based)")
+    start_time: str = Field(..., description="Hora de inicio (HH:MM)")
+    end_time: str = Field(..., description="Hora de fin (HH:MM)")
+    duration_minutes: int = Field(..., ge=1, description="Duración en minutos")
+
+
+class BreakConfig(BaseModel):
+    """Schema para configuración de un recreo/descanso."""
+    after_period: int = Field(..., ge=1, description="Después de qué periodo")
+    start_time: str = Field(..., description="Hora de inicio (HH:MM)")
+    end_time: str = Field(..., description="Hora de fin (HH:MM)")
+    name: str = Field("Recreo", description="Nombre del descanso")
+
+
+class CenterConfigUpdate(BaseModel):
+    """Schema para actualizar la configuración del centro."""
+    center_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    academic_year: Optional[str] = Field(None, min_length=1, max_length=20)
+    schedule_type: Optional[str] = Field(None, description="continua o partida")
+    education_levels: Optional[List[str]] = None
+    periods_per_day: Optional[int] = Field(None, ge=1, le=12)
+    days_per_week: Optional[int] = Field(None, ge=1, le=7)
+    total_weekly_hours: Optional[int] = Field(None, ge=1, le=60)
+    teaching_hours_per_week: Optional[int] = Field(None, ge=1, le=50)
+    periods: Optional[List[PeriodConfig]] = None
+    breaks: Optional[List[BreakConfig]] = None
+
+
+class CenterConfigResponse(BaseModel):
+    """Schema para respuesta de configuración del centro."""
+    id: UUID
+    center_name: str
+    academic_year: str
+    schedule_type: str
+    education_levels: List[str]
+    periods_per_day: int
+    days_per_week: int
+    total_weekly_hours: int
+    teaching_hours_per_week: int
+    periods: List[PeriodConfig]
+    breaks: List[BreakConfig]
     created_at: datetime
     
     class Config:

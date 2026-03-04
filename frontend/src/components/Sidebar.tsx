@@ -15,8 +15,15 @@ interface NavSection {
 
 const navigation: NavSection[] = [
   {
-    title: 'Datos Base',
+    title: 'Centro',
     icon: '🏫',
+    items: [
+      { name: 'Jornada y Niveles', path: '/center-settings', icon: '⚙️' },
+    ],
+  },
+  {
+    title: 'Datos Base',
+    icon: '📋',
     items: [
       { name: 'Profesores', path: '/teachers', icon: '👨‍🏫' },
       { name: 'Asignaturas', path: '/subjects', icon: '📚' },
