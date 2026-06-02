@@ -112,8 +112,42 @@ export const DashboardPage: React.FC = () => {
   const progressPercent = (completedSteps / setupSteps.length) * 100;
   const isReadyToGenerate = completedSteps >= 4;
 
+  const totalEntities = Object.values(health.entities).reduce((a, b) => a + b, 0);
+  const isFirstTime = totalEntities === 0;
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
+      {/* First-time onboarding wizard */}
+      {isFirstTime && (
+        <div className="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-2xl p-8 text-white shadow-xl">
+          <div className="flex items-start gap-6">
+            <div className="text-5xl flex-shrink-0">👋</div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold mb-1">¡Bienvenido a HorarioCentros!</h2>
+              <p className="text-blue-100 mb-6">Sigue estos 5 pasos para generar tu primer horario automático.</p>
+              <ol className="space-y-3">
+                {[
+                  { step: 1, label: 'Configura la jornada y el tipo de centro', path: '/center-settings', icon: '⚙️' },
+                  { step: 2, label: 'Añade el profesorado del centro', path: '/teachers', icon: '🧑‍🏫' },
+                  { step: 3, label: 'Define las asignaturas', path: '/subjects', icon: '📚' },
+                  { step: 4, label: 'Crea los grupos de alumnos y las aulas', path: '/groups', icon: '👥' },
+                  { step: 5, label: 'Asigna docentes a asignaturas y grupos', path: '/assignments', icon: '📋' },
+                ].map(({ step, label, path, icon }) => (
+                  <li key={step}>
+                    <a href={path} className="flex items-center gap-3 bg-white/10 hover:bg-white/20 rounded-xl px-4 py-3 transition-all group">
+                      <span className="w-7 h-7 flex-shrink-0 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">{step}</span>
+                      <span className="text-lg">{icon}</span>
+                      <span className="text-sm font-medium group-hover:underline">{label}</span>
+                      <svg className="w-4 h-4 ml-auto opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Welcome Section */}
       <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 rounded-2xl p-8 text-white shadow-xl">
         <div className="flex items-start justify-between">

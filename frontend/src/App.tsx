@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ToastProvider } from './components/Toast';
+import { ConfirmProvider } from './components/ConfirmModal';
 import { AppLayout } from './components/AppLayout';
 import { DashboardPage } from './pages/DashboardPage';
 import { TeachersPage } from './pages/TeachersPage';
@@ -14,6 +16,8 @@ import { CenterSettingsPage } from './pages/CenterSettingsPage';
 
 function App() {
   return (
+    <ToastProvider>
+      <ConfirmProvider>
     <BrowserRouter>
       <AppLayout>
         <Routes>
@@ -31,6 +35,8 @@ function App() {
         </Routes>
       </AppLayout>
     </BrowserRouter>
+      </ConfirmProvider>
+    </ToastProvider>
   );
 }
 

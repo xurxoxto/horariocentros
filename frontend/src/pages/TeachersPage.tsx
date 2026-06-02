@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../components/Toast';
+import { useConfirm } from '../components/ConfirmModal';
 import { getTeachers, createTeacher, deleteTeacher, updateTeacher, getCenterConfig } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -41,6 +43,8 @@ const makeInitialFormData = (centerConfig?: CenterConfig | null) => ({
 });
 
 export const TeachersPage: React.FC = () => {
+  const { toast } = useToast();
+  const { confirm } = useConfirm();
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,9 +89,10 @@ export const TeachersPage: React.FC = () => {
       setShowForm(false);
       setEditingTeacher(null);
       setActiveTab('basic');
+      toast(editingTeacher ? 'Docente actualizado correctamente' : 'Docente añadido correctamente', 'success');
       loadTeachers();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al guardar docente');
+      toast(err instanceof Error ? err.message : 'Error al guardar docente', 'error');
     }
   };
 
@@ -112,12 +117,13 @@ export const TeachersPage: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar esta persona del profesorado?')) return;
+    const ok = await confirm({ title: 'Eliminar docente', message: '¿Seguro que quieres eliminar esta persona del profesorado? Esta acción no se puede deshacer.', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     try {
       await deleteTeacher(id);
       loadTeachers();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar del profesorado');
+      toast(err instanceof Error ? err.message : 'Error al eliminar del profesorado', 'error');
     }
   };
 
@@ -537,7 +543,7 @@ export const TeachersPage: React.FC = () => {
       {teachers.length === 0 ? (
         <Card>
           <EmptyState
-            icon="🧑‍🏫"
+            illustration="teachers"
             title="No hay docentes"
             description="Añade personal docente para comenzar a configurar los horarios del centro."
             action={

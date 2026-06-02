@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useConfirm } from '../components/ConfirmModal';
 import { getTeachers, getGroups, getRooms, getSubjects, getAssignments } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -17,6 +18,7 @@ interface Constraint {
 }
 
 export const ConstraintsPage: React.FC = () => {
+  const { confirm } = useConfirm();
   const [constraints, setConstraints] = useState<Constraint[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
@@ -132,8 +134,9 @@ export const ConstraintsPage: React.FC = () => {
     });
   };
 
-  const handleDelete = (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta restricción?')) return;
+  const handleDelete = async (id: string) => {
+    const ok = await confirm({ title: 'Eliminar restricción', message: '¿Seguro que quieres eliminar esta restricción?', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     setConstraints(constraints.filter(c => c.id !== id));
   };
 

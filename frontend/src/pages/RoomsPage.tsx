@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../components/Toast';
+import { useConfirm } from '../components/ConfirmModal';
 import { getRooms, createRoom, deleteRoom } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -26,6 +28,8 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export const RoomsPage: React.FC = () => {
+  const { toast } = useToast();
+  const { confirm } = useConfirm();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,21 +61,23 @@ export const RoomsPage: React.FC = () => {
     e.preventDefault();
     try {
       await createRoom(formData);
+      toast('Aula creada correctamente', 'success');
       setFormData({ name: '', capacity: 30, room_type: 'classroom' });
       setShowForm(false);
       loadRooms();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al crear aula');
+      toast(err instanceof Error ? err.message : 'Error al crear aula', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar esta aula?')) return;
+    const ok = await confirm({ title: 'Eliminar aula', message: '¿Seguro que quieres eliminar esta aula? Esta acción no se puede deshacer.', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     try {
       await deleteRoom(id);
       loadRooms();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar aula');
+      toast(err instanceof Error ? err.message : 'Error al eliminar aula', 'error');
     }
   };
 
@@ -175,7 +181,7 @@ export const RoomsPage: React.FC = () => {
       {rooms.length === 0 ? (
         <Card>
           <EmptyState
-            icon="🚪"
+            illustration="rooms"
             title="No hay aulas"
             description="Añade aulas y espacios disponibles en el centro educativo."
             action={

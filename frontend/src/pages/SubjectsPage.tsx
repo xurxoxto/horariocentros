@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useToast } from '../components/Toast';
+import { useConfirm } from '../components/ConfirmModal';
 import { getSubjects, createSubject, deleteSubject } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -6,6 +8,8 @@ import { Card, Button, EmptyState } from '../components/ui';
 import type { Subject } from '../types';
 
 export const SubjectsPage: React.FC = () => {
+  const { toast } = useToast();
+  const { confirm } = useConfirm();
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,24 +39,26 @@ export const SubjectsPage: React.FC = () => {
     try {
       setSaving(true);
       await createSubject({ name: name.trim(), hours_per_week: hoursPerWeek, requires_lab: false, excluded_room_ids: [] });
+      toast('Asignatura añadida correctamente', 'success');
       setName('');
       setHoursPerWeek(3);
       loadSubjects();
       inputRef.current?.focus();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al crear asignatura');
+      toast(err instanceof Error ? err.message : 'Error al crear asignatura', 'error');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar esta asignatura?')) return;
+    const ok = await confirm({ title: 'Eliminar asignatura', message: '¿Seguro que quieres eliminar esta asignatura? Esta acción no se puede deshacer.', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     try {
       await deleteSubject(id);
       setSubjects(prev => prev.filter(s => s.id !== id));
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar asignatura');
+      toast(err instanceof Error ? err.message : 'Error al eliminar asignatura', 'error');
     }
   };
 
@@ -106,7 +112,7 @@ export const SubjectsPage: React.FC = () => {
       {subjects.length === 0 ? (
         <Card>
           <EmptyState
-            icon="📚"
+            illustration="subjects"
             title="No hay asignaturas"
             description="Escribe el nombre de la primera asignatura arriba y pulsa Añadir."
           />

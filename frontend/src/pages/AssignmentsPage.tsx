@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useToast } from '../components/Toast';
+import { useConfirm } from '../components/ConfirmModal';
 import { getAssignments, createAssignment, deleteAssignment, getTeachers, getSubjects, getGroups } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
+import { EmptyState } from '../components/ui';
 import type { SubjectAssignment, Teacher, Subject, Group } from '../types';
 
 export const AssignmentsPage: React.FC = () => {
+  const { toast } = useToast();
+  const { confirm } = useConfirm();
   const [assignments, setAssignments] = useState<SubjectAssignment[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -65,9 +70,10 @@ export const AssignmentsPage: React.FC = () => {
   }));
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Eliminar esta asignación?')) return;
+    const ok = await confirm({ title: 'Eliminar asignación', message: '¿Seguro que quieres eliminar esta asignación?', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     try { await deleteAssignment(id); loadData(); }
-    catch (err) { setError(err instanceof Error ? err.message : 'Error al eliminar'); }
+    catch (err) { toast(err instanceof Error ? err.message : 'Error al eliminar', 'error'); }
   };
 
   const getTeacherName = (id: string) => teachers.find(t => t.id === id)?.name || id;
@@ -300,10 +306,12 @@ export const AssignmentsPage: React.FC = () => {
       {/* Assignments table */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         {assignments.length === 0 ? (
-          <div className="px-6 py-12 text-center text-gray-400">
-            <p className="text-4xl mb-3">📋</p>
-            <p className="font-medium text-gray-600">No hay asignaciones todavía</p>
-            <p className="text-sm mt-1">Crea la primera para relacionar el profesorado con asignaturas y grupos</p>
+          <div className="px-6 py-12 flex flex-col items-center text-gray-400">
+            <EmptyState
+              illustration="assignments"
+              title="No hay asignaciones todavía"
+              description="Crea la primera para relacionar el profesorado con asignaturas y grupos"
+            />
           </div>
         ) : (
           <table className="min-w-full divide-y divide-gray-100">

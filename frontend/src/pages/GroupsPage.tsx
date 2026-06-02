@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useToast } from '../components/Toast';
+import { useConfirm } from '../components/ConfirmModal';
 import { getGroups, createGroup, deleteGroup } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
@@ -50,6 +52,8 @@ const LEVEL_COLORS: Record<string, string> = {
 };
 
 export const GroupsPage: React.FC = () => {
+  const { toast } = useToast();
+  const { confirm } = useConfirm();
   const [groups, setGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,21 +85,23 @@ export const GroupsPage: React.FC = () => {
     e.preventDefault();
     try {
       await createGroup(formData);
+      toast('Grupo creado correctamente', 'success');
       setFormData({ name: '', level: 'ESO1', num_students: 25 });
       setShowForm(false);
       loadGroups();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al crear grupo');
+      toast(err instanceof Error ? err.message : 'Error al crear grupo', 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este grupo?')) return;
+    const ok = await confirm({ title: 'Eliminar grupo', message: '¿Seguro que quieres eliminar este grupo? Esta acción no se puede deshacer.', confirmLabel: 'Eliminar', danger: true });
+    if (!ok) return;
     try {
       await deleteGroup(id);
       loadGroups();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar grupo');
+      toast(err instanceof Error ? err.message : 'Error al eliminar grupo', 'error');
     }
   };
 
@@ -197,7 +203,7 @@ export const GroupsPage: React.FC = () => {
       {groups.length === 0 ? (
         <Card>
           <EmptyState
-            icon="👥"
+            illustration="groups"
             title="No hay grupos"
             description="Añade grupos de alumnos para organizar las clases del centro."
             action={
