@@ -25,10 +25,10 @@ const HOUR_TYPES = [
   { key: 'management_hours', label: 'Eq. Directivo', icon: '👔', color: 'bg-rose-500', lightColor: 'bg-rose-100 text-rose-800', max: 20 },
 ];
 
-const initialFormData = {
+const makeInitialFormData = (centerConfig?: CenterConfig | null) => ({
   name: '',
-  max_hours_per_day: 6,
-  max_hours_per_week: 25,
+  max_hours_per_day: centerConfig?.periods_per_day ?? 6,
+  max_hours_per_week: centerConfig?.teaching_hours_per_week ?? 25,
   prefer_consecutive_free_hours: false,
   free_hour_preference: 'no_preference' as FreeHourPreference,
   preferred_free_hours: [] as number[],
@@ -38,7 +38,7 @@ const initialFormData = {
   coordination_hours: 0,
   management_hours: 0,
   no_coordination_next_to_free: false,
-};
+});
 
 export const TeachersPage: React.FC = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -46,7 +46,7 @@ export const TeachersPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null);
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(() => makeInitialFormData());
   const [activeTab, setActiveTab] = useState<'basic' | 'hours' | 'preferences'>('basic');
   const [centerConfig, setCenterConfig] = useState<CenterConfig | null>(null);
 
@@ -57,6 +57,11 @@ export const TeachersPage: React.FC = () => {
       const [data, config] = await Promise.all([getTeachers(), getCenterConfig().catch(() => null)]);
       setTeachers(data);
       setCenterConfig(config);
+      // Update form defaults from center config (only if not editing an existing teacher)
+      setFormData(prev => {
+        if (prev.name !== '') return prev; // editing in progress, don't reset
+        return makeInitialFormData(config);
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar profesores');
     } finally {
@@ -76,7 +81,7 @@ export const TeachersPage: React.FC = () => {
       } else {
         await createTeacher(formData);
       }
-      setFormData(initialFormData);
+      setFormData(makeInitialFormData(centerConfig));
       setShowForm(false);
       setEditingTeacher(null);
       setActiveTab('basic');
@@ -119,7 +124,7 @@ export const TeachersPage: React.FC = () => {
   const closeForm = () => {
     setShowForm(false);
     setEditingTeacher(null);
-    setFormData(initialFormData);
+    setFormData(makeInitialFormData(centerConfig));
     setActiveTab('basic');
   };
 
@@ -145,7 +150,7 @@ export const TeachersPage: React.FC = () => {
           </p>
         </div>
         <Button
-          onClick={() => { setShowForm(!showForm); setEditingTeacher(null); setFormData(initialFormData); }}
+          onClick={() => { setShowForm(!showForm); setEditingTeacher(null); setFormData(makeInitialFormData(centerConfig)); }}
           variant={showForm ? 'secondary' : 'primary'}
           icon={showForm ? '✕' : '➕'}
         >
