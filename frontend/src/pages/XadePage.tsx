@@ -225,7 +225,7 @@ const ImportTab: React.FC = () => {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     const droppedFiles = Array.from(e.dataTransfer.files).filter(
-      (f) => f.name.toLowerCase().endsWith('.csv') || f.name.toLowerCase().endsWith('.zip')
+      (f) => f.name.toLowerCase().endsWith('.csv') || f.name.toLowerCase().endsWith('.zip') || f.name.toLowerCase().endsWith('.fet')
     );
     if (droppedFiles.length > 0) {
       setFiles(droppedFiles);
@@ -309,11 +309,18 @@ const ImportTab: React.FC = () => {
       {step === 'upload' && (
         <Card>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <span>📁</span> Subir ficheiros de XADE
+            <span>📁</span> Subir ficheiro de datos
           </h3>
           <p className="text-gray-600 mb-4">
-            Selecciona os ficheiros CSV descargados de XADE Horarios, ou un ficheiro ZIP con todos eles.
+            Selecciona un ficheiro <strong>.fet</strong> de FET (Free Timetabling Software) ou os ficheiros <strong>CSV</strong> descargados de XADE Horarios, ou un <strong>ZIP</strong> con todos eles.
           </p>
+
+          {/* Format badges */}
+          <div className="flex gap-2 mb-4">
+            <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full border border-green-200">🗂️ .fet (FET)</span>
+            <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">📄 .csv (XADE)</span>
+            <span className="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full border border-purple-200">📦 .zip (XADE)</span>
+          </div>
 
           {/* Drop zone */}
           <div
@@ -322,18 +329,18 @@ const ImportTab: React.FC = () => {
             onClick={() => fileInputRef.current?.click()}
             className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-all"
           >
-            <div className="text-5xl mb-4">📄</div>
+            <div className="text-5xl mb-4">📂</div>
             <p className="text-lg font-medium text-gray-700">
-              Arrastra os ficheiros aquí ou fai clic para seleccionar
+              Arrastra o ficheiro aquí ou fai clic para seleccionar
             </p>
             <p className="text-sm text-gray-500 mt-2">
-              Ficheiros CSV ou ZIP de XADE Horarios
+              Ficheiros .fet, CSV ou ZIP
             </p>
             <input
               ref={fileInputRef}
               type="file"
               multiple
-              accept=".csv,.zip"
+              accept=".csv,.zip,.fet"
               onChange={handleFileSelect}
               className="hidden"
             />
@@ -346,7 +353,7 @@ const ImportTab: React.FC = () => {
               <div className="space-y-2">
                 {files.map((file, i) => (
                   <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
-                    <span className="text-xl">{file.name.endsWith('.zip') ? '📦' : '📄'}</span>
+                    <span className="text-xl">{file.name.endsWith('.zip') ? '📦' : file.name.endsWith('.fet') ? '🗂️' : '📄'}</span>
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-800">{file.name}</p>
                       <p className="text-xs text-gray-500">{(file.size / 1024).toFixed(1)} KB</p>
@@ -374,26 +381,20 @@ const ImportTab: React.FC = () => {
           )}
 
           {/* Expected files help */}
-          <div className="mt-6 bg-gray-50 rounded-xl p-4">
-            <h4 className="text-sm font-semibold text-gray-700 mb-2">📝 Ficheiros esperados de XADE:</h4>
-            <div className="grid grid-cols-2 gap-2 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <span className="text-blue-500">•</span> profesores.csv
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-green-500">•</span> materias.csv
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-amber-500">•</span> grupos.csv
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-purple-500">•</span> aulas.csv
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-red-500">•</span> cursos.csv
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-indigo-500">•</span> horario_base.csv
+          <div className="mt-6 space-y-3">
+            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <h4 className="text-sm font-semibold text-green-800 mb-2">🗂️ Opción A — Ficheiro FET (recomendado):</h4>
+              <p className="text-sm text-green-700">Un único ficheiro <code className="bg-green-100 px-1 rounded">horario.fet</code> exportado desde FET (Free Timetabling Software). Contén profesores, materias, grupos, aulas e asignacións.</p>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h4 className="text-sm font-semibold text-blue-800 mb-2">📄 Opción B — CSV de XADE:</h4>
+              <div className="grid grid-cols-2 gap-1 text-sm text-blue-700">
+                <div>• profesores.csv</div>
+                <div>• materias.csv</div>
+                <div>• grupos.csv</div>
+                <div>• aulas.csv</div>
+                <div>• cursos.csv</div>
+                <div>• horario_base.csv</div>
               </div>
             </div>
           </div>

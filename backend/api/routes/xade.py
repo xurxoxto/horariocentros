@@ -16,6 +16,7 @@ import io
 import json
 
 from backend.xade.importer import import_from_csv_files, import_from_zip, XadeImportResult
+from backend.xade.fet_importer import import_from_fet
 from backend.xade.exporter import (
     export_group_timetable_csv,
     export_full_timetable_csv,
@@ -52,11 +53,35 @@ async def preview_xade_import(files: List[UploadFile] = File(...)):
         content = await upload_file.read()
         filename = upload_file.filename or "unknown.csv"
         
+        if filename.lower().endswith('.fet'):
+            # Process FET (Free Timetabling Software) XML file
+            result = import_from_fet(content)
+            return {
+                "status": "preview",
+                "source": "fet",
+                "institution_name": getattr(result, 'institution_name', ''),
+                "data": {
+                    "teachers": result.teachers,
+                    "subjects": result.subjects,
+                    "groups": result.groups,
+                    "rooms": result.rooms,
+                    "courses": [],
+                    "time_slots": result.time_slots,
+                    "assignments": result.assignments,
+                    "activities": result.activities,
+                },
+                "summary": result.summary,
+                "files_processed": [filename],
+                "warnings": result.warnings,
+                "errors": result.errors,
+            }
+
         if filename.lower().endswith('.zip'):
             # Process ZIP file
             result = import_from_zip(content)
             return {
                 "status": "preview",
+                "source": "xade",
                 "data": {
                     "teachers": result.teachers,
                     "subjects": result.subjects,
@@ -75,7 +100,7 @@ async def preview_xade_import(files: List[UploadFile] = File(...)):
             csv_files[filename] = content
     
     if not csv_files:
-        raise HTTPException(status_code=400, detail="Non se atoparon ficheiros CSV válidos")
+        raise HTTPException(status_code=400, detail="Non se atoparon ficheiros CSV ou FET válidos")
     
     result = import_from_csv_files(csv_files)
     
@@ -116,7 +141,10 @@ async def confirm_xade_import(files: List[UploadFile] = File(...)):
         content = await upload_file.read()
         filename = upload_file.filename or "unknown.csv"
         
-        if filename.lower().endswith('.zip'):
+        if filename.lower().endswith('.fet'):
+            result = import_from_fet(content)
+            break
+        elif filename.lower().endswith('.zip'):
             result = import_from_zip(content)
             break
         else:
