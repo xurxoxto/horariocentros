@@ -32,4 +32,5 @@ ENV DATABASE_URL=sqlite:////data/horariocentros.db
 
 EXPOSE 8000
 
-CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use shell form so $PORT env var is resolved at runtime (required by Railway)
+CMD uvicorn backend.api.main:app --host 0.0.0.0 --port ${PORT:-8000}
