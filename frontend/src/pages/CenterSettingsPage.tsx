@@ -15,9 +15,9 @@ const SCHEDULE_TEMPLATES: Record<string, {
   periods: PeriodConfig[];
   breaks: BreakConfig[];
 }> = {
-  continua_infantil_primaria: {
-    label: 'Jornada continua – Infantil/Primaria',
-    description: '9:00 a 14:30 · 5 sesiones de 1h · 23h lectivas + 2h complementarias',
+  primaria: {
+    label: 'Infantil / Primaria',
+    description: 'Jornada continua · 5 sesiones/día · 25h alumnado · 23h lectivas profesorado',
     center_type: 'primaria',
     periods_per_day: 5,
     total_weekly_hours: 25,
@@ -33,9 +33,9 @@ const SCHEDULE_TEMPLATES: Record<string, {
       { after_period: 3, start_time: '12:00', end_time: '12:30', name: 'Recreo' },
     ],
   },
-  continua_secundaria_18h: {
-    label: 'Jornada continua – Secundaria (18h lectivas)',
-    description: '8:30 a 14:30 · 6 sesiones de 55min · 18h lectivas (cómputo estándar)',
+  secundaria: {
+    label: 'Secundaria / FP / Bachillerato',
+    description: 'Jornada continua · 6 sesiones/día · 30h alumnado · 18h lectivas profesorado',
     center_type: 'secundaria',
     periods_per_day: 6,
     total_weekly_hours: 30,
@@ -50,66 +50,6 @@ const SCHEDULE_TEMPLATES: Record<string, {
     ],
     breaks: [
       { after_period: 3, start_time: '11:15', end_time: '11:45', name: 'Recreo' },
-    ],
-  },
-  continua_secundaria_20h: {
-    label: 'Jornada continua – Secundaria (20h lectivas)',
-    description: '8:30 a 14:30 · 6 sesiones de 55min · 20h lectivas (máximo con excepciones)',
-    center_type: 'secundaria',
-    periods_per_day: 6,
-    total_weekly_hours: 30,
-    teaching_hours_per_week: 20,
-    periods: [
-      { number: 1, start_time: '08:30', end_time: '09:25', duration_minutes: 55 },
-      { number: 2, start_time: '09:25', end_time: '10:20', duration_minutes: 55 },
-      { number: 3, start_time: '10:20', end_time: '11:15', duration_minutes: 55 },
-      { number: 4, start_time: '11:45', end_time: '12:40', duration_minutes: 55 },
-      { number: 5, start_time: '12:40', end_time: '13:35', duration_minutes: 55 },
-      { number: 6, start_time: '13:35', end_time: '14:30', duration_minutes: 55 },
-    ],
-    breaks: [
-      { after_period: 3, start_time: '11:15', end_time: '11:45', name: 'Recreo' },
-    ],
-  },
-  continua_7sesiones: {
-    label: 'Jornada continua – 7 sesiones',
-    description: '8:15 a 14:45 · 7 sesiones de 50min · Recreo tras 3ª y 5ª',
-    center_type: 'secundaria',
-    periods_per_day: 7,
-    total_weekly_hours: 35,
-    teaching_hours_per_week: 18,
-    periods: [
-      { number: 1, start_time: '08:15', end_time: '09:05', duration_minutes: 50 },
-      { number: 2, start_time: '09:05', end_time: '09:55', duration_minutes: 50 },
-      { number: 3, start_time: '09:55', end_time: '10:45', duration_minutes: 50 },
-      { number: 4, start_time: '11:15', end_time: '12:05', duration_minutes: 50 },
-      { number: 5, start_time: '12:05', end_time: '12:55', duration_minutes: 50 },
-      { number: 6, start_time: '13:15', end_time: '14:05', duration_minutes: 50 },
-      { number: 7, start_time: '14:05', end_time: '14:45', duration_minutes: 50 },
-    ],
-    breaks: [
-      { after_period: 3, start_time: '10:45', end_time: '11:15', name: 'Recreo' },
-      { after_period: 5, start_time: '12:55', end_time: '13:15', name: 'Descanso' },
-    ],
-  },
-  partida: {
-    label: 'Jornada partida',
-    description: '9:00 a 13:00 + 15:00 a 17:00 · 6 sesiones · Recreo mañana y tarde',
-    center_type: 'primaria',
-    periods_per_day: 6,
-    total_weekly_hours: 30,
-    teaching_hours_per_week: 23,
-    periods: [
-      { number: 1, start_time: '09:00', end_time: '10:00', duration_minutes: 60 },
-      { number: 2, start_time: '10:00', end_time: '11:00', duration_minutes: 60 },
-      { number: 3, start_time: '11:30', end_time: '12:30', duration_minutes: 60 },
-      { number: 4, start_time: '12:30', end_time: '13:30', duration_minutes: 60 },
-      { number: 5, start_time: '15:00', end_time: '16:00', duration_minutes: 60 },
-      { number: 6, start_time: '16:00', end_time: '17:00', duration_minutes: 60 },
-    ],
-    breaks: [
-      { after_period: 2, start_time: '11:00', end_time: '11:30', name: 'Recreo mañana' },
-      { after_period: 4, start_time: '13:30', end_time: '15:00', name: 'Mediodía' },
     ],
   },
 };
@@ -435,15 +375,18 @@ export const CenterSettingsPage: React.FC = () => {
               {formData.center_type === 'primaria' && <span className="text-green-600 font-bold text-sm">✓ Seleccionado</span>}
             </div>
             <p className="font-semibold text-gray-900">Infantil / Primaria</p>
-            <p className="text-sm text-gray-500 mt-1">25h totales/semana</p>
-            <div className="mt-3 space-y-1">
+            <div className="mt-3 space-y-1.5">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-blue-700 font-medium">🎓 23h lectivas</span>
-                <span className="text-gray-400">(impartición directa)</span>
+                <span className="text-purple-700 font-medium">👨‍🎓 25h alumnado/semana</span>
+                <span className="text-gray-400">(horas de clase)</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-700 font-medium">🧑‍🏫 23h lectivas docente</span>
+                <span className="text-gray-400">(incluye guardias y coord.)</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-amber-700 font-medium">📋 2h complementarias</span>
-                <span className="text-gray-400">(guardias, coordinación…)</span>
+                <span className="text-gray-400">(apoyos, reuniones…)</span>
               </div>
             </div>
           </button>
@@ -464,10 +407,13 @@ export const CenterSettingsPage: React.FC = () => {
               {formData.center_type === 'secundaria' && <span className="text-blue-600 font-bold text-sm">✓ Seleccionado</span>}
             </div>
             <p className="font-semibold text-gray-900">Secundaria / FP / Bachillerato</p>
-            <p className="text-sm text-gray-500 mt-1">30h totales/semana</p>
-            <div className="mt-3 space-y-1">
+            <div className="mt-3 space-y-1.5">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-blue-700 font-medium">🎓 18h lectivas</span>
+                <span className="text-purple-700 font-medium">👨‍🎓 30h alumnado/semana</span>
+                <span className="text-gray-400">(horas de clase)</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-700 font-medium">🧑‍🏫 18h lectivas docente</span>
                 <span className="text-gray-400">(cómputo estándar)</span>
               </div>
               <div className="flex items-center justify-between text-sm">
@@ -526,19 +472,31 @@ export const CenterSettingsPage: React.FC = () => {
         </h3>
 
         <div className="mb-6">
-          <p className="text-sm font-medium text-gray-700 mb-3">Plantillas predefinidas (selecciona una como base y luego ajusta):</p>
+          <p className="text-sm font-medium text-gray-700 mb-3">Plantilla de jornada (selecciona y ajusta a tu centro):</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {Object.entries(SCHEDULE_TEMPLATES).map(([key, template]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => applyTemplate(key)}
-                className="text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all"
-              >
-                <p className="font-medium text-gray-900">{template.label}</p>
-                <p className="text-sm text-gray-500">{template.description}</p>
-              </button>
-            ))}
+            {Object.entries(SCHEDULE_TEMPLATES).map(([key, template]) => {
+              const isActive = formData.center_type === template.center_type &&
+                formData.periods_per_day === template.periods_per_day &&
+                formData.teaching_hours_per_week === template.teaching_hours_per_week;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => applyTemplate(key)}
+                  className={`text-left p-4 rounded-xl border-2 transition-all ${
+                    isActive
+                      ? 'border-blue-500 bg-blue-50 shadow-sm'
+                      : 'border-gray-200 hover:border-blue-300 hover:bg-blue-50'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="font-semibold text-gray-900">{template.label}</p>
+                    {isActive && <span className="text-blue-600 text-xs font-bold">✓ Activa</span>}
+                  </div>
+                  <p className="text-sm text-gray-500">{template.description}</p>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -554,11 +512,11 @@ export const CenterSettingsPage: React.FC = () => {
           </div>
           <div className="bg-purple-50 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-purple-700">{formData.total_weekly_hours}</p>
-            <p className="text-sm text-purple-600">Horas/semana totales</p>
+            <p className="text-sm text-purple-600">Horas alumnado/sem</p>
           </div>
           <div className="bg-amber-50 rounded-xl p-4 text-center">
             <p className="text-2xl font-bold text-amber-700">{formData.teaching_hours_per_week}</p>
-            <p className="text-sm text-amber-600">Horas lectivas</p>
+            <p className="text-sm text-amber-600">H. lectivas docente/sem</p>
           </div>
         </div>
 
@@ -586,7 +544,7 @@ export const CenterSettingsPage: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Total horas/semana</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Total horas alumnado/sem</label>
               <input
                 type="number"
                 min="1"
@@ -597,7 +555,7 @@ export const CenterSettingsPage: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Horas lectivas/semana</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">H. lectivas docente/sem</label>
               <input
                 type="number"
                 min="1"
@@ -611,7 +569,11 @@ export const CenterSettingsPage: React.FC = () => {
 
         {/* Distribución de horas por semana */}
         <div className="bg-gray-50 rounded-xl p-4 mb-6">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Distribución semanal del profesorado</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-1">Distribución semanal del profesorado</h4>
+          <p className="text-xs text-gray-400 mb-3">
+            El alumnado tiene <strong>{formData.total_weekly_hours}h</strong> de clase/semana.
+            Cada docente imparte <strong>{formData.teaching_hours_per_week}h lectivas</strong> y tiene <strong>{nonTeachingHours}h</strong> para guardias, coordinación y apoyos.
+          </p>
           <div className="flex items-center space-x-1 h-8 rounded-lg overflow-hidden">
             <div
               className="bg-blue-500 h-full rounded-l-lg flex items-center justify-center text-white text-xs font-medium"
@@ -623,12 +585,9 @@ export const CenterSettingsPage: React.FC = () => {
               className="bg-amber-500 h-full rounded-r-lg flex items-center justify-center text-white text-xs font-medium"
               style={{ width: `${(nonTeachingHours / (formData.total_weekly_hours || 30)) * 100}%` }}
             >
-              Complementarias: {nonTeachingHours}h
+              Guardias/coord.: {nonTeachingHours}h
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Las horas complementarias incluyen: guardias, apoyos, coordinación, recreos, etc.
-          </p>
         </div>
 
         {/* Periodos */}
