@@ -222,6 +222,7 @@ class CenterConfigUpdate(BaseModel):
     """Schema para actualizar la configuración del centro."""
     center_name: Optional[str] = Field(None, min_length=1, max_length=255)
     academic_year: Optional[str] = Field(None, min_length=1, max_length=20)
+    center_type: Optional[str] = Field(None, description="primaria o secundaria")
     schedule_type: Optional[str] = Field(None, description="continua o partida")
     education_levels: Optional[List[str]] = None
     periods_per_day: Optional[int] = Field(None, ge=1, le=12)
@@ -237,6 +238,7 @@ class CenterConfigResponse(BaseModel):
     id: UUID
     center_name: str
     academic_year: str
+    center_type: str
     schedule_type: str
     education_levels: List[str]
     periods_per_day: int

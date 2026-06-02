@@ -227,6 +227,7 @@ export interface CenterConfig {
   id: string;
   center_name: string;
   academic_year: string;
+  center_type: 'primaria' | 'secundaria';
   schedule_type: 'continua' | 'partida';
   education_levels: string[];
   periods_per_day: number;

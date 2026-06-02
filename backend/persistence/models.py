@@ -201,6 +201,7 @@ class CenterConfig(Base):
     id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     center_name = Column(String(255), nullable=False, default="Mi Centro")
     academic_year = Column(String(20), nullable=False, default="2025-2026")
+    center_type = Column(String(20), nullable=False, default="primaria")  # primaria, secundaria
     schedule_type = Column(String(20), nullable=False, default="continua")  # continua, partida
     education_levels = Column(String(500), nullable=False, default="infantil,primaria,eso,bachillerato")
     periods_per_day = Column(Integer, nullable=False, default=6)

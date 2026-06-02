@@ -14,18 +14,17 @@ from backend.persistence.database import get_session
 
 router = APIRouter()
 
-# Default periods for "jornada continua" secondary
+# Default periods for "jornada continua" Infantil/Primaria
 DEFAULT_PERIODS = [
-    {"number": 1, "start_time": "08:30", "end_time": "09:25", "duration_minutes": 55},
-    {"number": 2, "start_time": "09:25", "end_time": "10:20", "duration_minutes": 55},
-    {"number": 3, "start_time": "10:20", "end_time": "11:15", "duration_minutes": 55},
-    {"number": 4, "start_time": "11:45", "end_time": "12:40", "duration_minutes": 55},
-    {"number": 5, "start_time": "12:40", "end_time": "13:35", "duration_minutes": 55},
-    {"number": 6, "start_time": "13:35", "end_time": "14:30", "duration_minutes": 55},
+    {"number": 1, "start_time": "09:00", "end_time": "10:00", "duration_minutes": 60},
+    {"number": 2, "start_time": "10:00", "end_time": "11:00", "duration_minutes": 60},
+    {"number": 3, "start_time": "11:00", "end_time": "12:00", "duration_minutes": 60},
+    {"number": 4, "start_time": "12:30", "end_time": "13:30", "duration_minutes": 60},
+    {"number": 5, "start_time": "13:30", "end_time": "14:30", "duration_minutes": 60},
 ]
 
 DEFAULT_BREAKS = [
-    {"after_period": 3, "start_time": "11:15", "end_time": "11:45", "name": "Recreo"},
+    {"after_period": 3, "start_time": "12:00", "end_time": "12:30", "name": "Recreo"},
 ]
 
 DEFAULT_EDUCATION_LEVELS = ["infantil", "primaria", "eso", "bachillerato"]
@@ -40,12 +39,13 @@ def _get_or_create_config():
             id=uuid4(),
             center_name="Mi Centro",
             academic_year="2025-2026",
+            center_type="primaria",
             schedule_type="continua",
             education_levels=",".join(DEFAULT_EDUCATION_LEVELS),
-            periods_per_day=6,
+            periods_per_day=5,
             days_per_week=5,
-            total_weekly_hours=30,
-            teaching_hours_per_week=25,
+            total_weekly_hours=25,
+            teaching_hours_per_week=23,
             periods_config=json.dumps(DEFAULT_PERIODS),
             breaks_config=json.dumps(DEFAULT_BREAKS),
         )
@@ -64,6 +64,7 @@ def _config_to_response(config: CenterConfig) -> CenterConfigResponse:
         id=config.id,
         center_name=config.center_name,
         academic_year=config.academic_year,
+        center_type=getattr(config, 'center_type', 'primaria') or 'primaria',
         schedule_type=config.schedule_type,
         education_levels=levels,
         periods_per_day=config.periods_per_day,
@@ -93,6 +94,8 @@ async def update_center_config(data: CenterConfigUpdate):
             config.center_name = data.center_name
         if data.academic_year is not None:
             config.academic_year = data.academic_year
+        if data.center_type is not None:
+            config.center_type = data.center_type
         if data.schedule_type is not None:
             config.schedule_type = data.schedule_type
         if data.education_levels is not None:

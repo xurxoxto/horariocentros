@@ -8,6 +8,7 @@ import type { CenterConfig, PeriodConfig, BreakConfig } from '../types';
 const SCHEDULE_TEMPLATES: Record<string, { 
   label: string; 
   description: string;
+  center_type: 'primaria' | 'secundaria';
   periods_per_day: number;
   total_weekly_hours: number;
   teaching_hours_per_week: number;
@@ -16,27 +17,48 @@ const SCHEDULE_TEMPLATES: Record<string, {
 }> = {
   continua_infantil_primaria: {
     label: 'Jornada continua – Infantil/Primaria',
-    description: '9:00 a 14:00 · 5 sesiones de 1h · Recreo tras 3ª sesión',
+    description: '9:00 a 14:30 · 5 sesiones de 1h · 23h lectivas + 2h complementarias',
+    center_type: 'primaria',
     periods_per_day: 5,
     total_weekly_hours: 25,
-    teaching_hours_per_week: 25,
+    teaching_hours_per_week: 23,
     periods: [
       { number: 1, start_time: '09:00', end_time: '10:00', duration_minutes: 60 },
       { number: 2, start_time: '10:00', end_time: '11:00', duration_minutes: 60 },
       { number: 3, start_time: '11:00', end_time: '12:00', duration_minutes: 60 },
       { number: 4, start_time: '12:30', end_time: '13:30', duration_minutes: 60 },
-      { number: 5, start_time: '13:30', end_time: '14:00', duration_minutes: 30 },
+      { number: 5, start_time: '13:30', end_time: '14:30', duration_minutes: 60 },
     ],
     breaks: [
       { after_period: 3, start_time: '12:00', end_time: '12:30', name: 'Recreo' },
     ],
   },
-  continua_secundaria: {
-    label: 'Jornada continua – Secundaria',
-    description: '8:30 a 14:30 · 6 sesiones de 55min · Recreo tras 3ª sesión',
+  continua_secundaria_18h: {
+    label: 'Jornada continua – Secundaria (18h lectivas)',
+    description: '8:30 a 14:30 · 6 sesiones de 55min · 18h lectivas (cómputo estándar)',
+    center_type: 'secundaria',
     periods_per_day: 6,
     total_weekly_hours: 30,
-    teaching_hours_per_week: 25,
+    teaching_hours_per_week: 18,
+    periods: [
+      { number: 1, start_time: '08:30', end_time: '09:25', duration_minutes: 55 },
+      { number: 2, start_time: '09:25', end_time: '10:20', duration_minutes: 55 },
+      { number: 3, start_time: '10:20', end_time: '11:15', duration_minutes: 55 },
+      { number: 4, start_time: '11:45', end_time: '12:40', duration_minutes: 55 },
+      { number: 5, start_time: '12:40', end_time: '13:35', duration_minutes: 55 },
+      { number: 6, start_time: '13:35', end_time: '14:30', duration_minutes: 55 },
+    ],
+    breaks: [
+      { after_period: 3, start_time: '11:15', end_time: '11:45', name: 'Recreo' },
+    ],
+  },
+  continua_secundaria_20h: {
+    label: 'Jornada continua – Secundaria (20h lectivas)',
+    description: '8:30 a 14:30 · 6 sesiones de 55min · 20h lectivas (máximo con excepciones)',
+    center_type: 'secundaria',
+    periods_per_day: 6,
+    total_weekly_hours: 30,
+    teaching_hours_per_week: 20,
     periods: [
       { number: 1, start_time: '08:30', end_time: '09:25', duration_minutes: 55 },
       { number: 2, start_time: '09:25', end_time: '10:20', duration_minutes: 55 },
@@ -52,9 +74,10 @@ const SCHEDULE_TEMPLATES: Record<string, {
   continua_7sesiones: {
     label: 'Jornada continua – 7 sesiones',
     description: '8:15 a 14:45 · 7 sesiones de 50min · Recreo tras 3ª y 5ª',
+    center_type: 'secundaria',
     periods_per_day: 7,
     total_weekly_hours: 35,
-    teaching_hours_per_week: 25,
+    teaching_hours_per_week: 18,
     periods: [
       { number: 1, start_time: '08:15', end_time: '09:05', duration_minutes: 50 },
       { number: 2, start_time: '09:05', end_time: '09:55', duration_minutes: 50 },
@@ -72,9 +95,10 @@ const SCHEDULE_TEMPLATES: Record<string, {
   partida: {
     label: 'Jornada partida',
     description: '9:00 a 13:00 + 15:00 a 17:00 · 6 sesiones · Recreo mañana y tarde',
+    center_type: 'primaria',
     periods_per_day: 6,
     total_weekly_hours: 30,
-    teaching_hours_per_week: 25,
+    teaching_hours_per_week: 23,
     periods: [
       { number: 1, start_time: '09:00', end_time: '10:00', duration_minutes: 60 },
       { number: 2, start_time: '10:00', end_time: '11:00', duration_minutes: 60 },
@@ -301,6 +325,7 @@ export const CenterSettingsPage: React.FC = () => {
     const template = SCHEDULE_TEMPLATES[templateKey];
     if (!template) return;
     update({
+      center_type: template.center_type,
       schedule_type: templateKey.startsWith('partida') ? 'partida' : 'continua',
       periods_per_day: template.periods_per_day,
       total_weekly_hours: template.total_weekly_hours,
@@ -382,6 +407,76 @@ export const CenterSettingsPage: React.FC = () => {
               placeholder="2025-2026"
             />
           </div>
+        </div>
+      </Card>
+
+      {/* Tipo de centro */}
+      <Card>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
+          <span className="mr-2">🏛️</span> Tipo de Centro
+        </h3>
+        <p className="text-sm text-gray-500 mb-4">
+          Determina las horas lectivas por defecto del profesorado según normativa.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <button
+            type="button"
+            onClick={() => {
+              update({ center_type: 'primaria', teaching_hours_per_week: 23, total_weekly_hours: 25 });
+            }}
+            className={`text-left p-5 rounded-xl border-2 transition-all ${
+              formData.center_type === 'primaria'
+                ? 'border-green-500 bg-green-50 shadow-sm'
+                : 'border-gray-200 bg-white hover:border-green-300 hover:bg-green-50'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-2">
+              <span className="text-2xl">🧒</span>
+              {formData.center_type === 'primaria' && <span className="text-green-600 font-bold text-sm">✓ Seleccionado</span>}
+            </div>
+            <p className="font-semibold text-gray-900">Infantil / Primaria</p>
+            <p className="text-sm text-gray-500 mt-1">25h totales/semana</p>
+            <div className="mt-3 space-y-1">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-700 font-medium">🎓 23h lectivas</span>
+                <span className="text-gray-400">(impartición directa)</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-amber-700 font-medium">📋 2h complementarias</span>
+                <span className="text-gray-400">(guardias, coordinación…)</span>
+              </div>
+            </div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              update({ center_type: 'secundaria', teaching_hours_per_week: 18, total_weekly_hours: 30 });
+            }}
+            className={`text-left p-5 rounded-xl border-2 transition-all ${
+              formData.center_type === 'secundaria'
+                ? 'border-blue-500 bg-blue-50 shadow-sm'
+                : 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50'
+            }`}
+          >
+            <div className="flex items-start justify-between mb-2">
+              <span className="text-2xl">🎓</span>
+              {formData.center_type === 'secundaria' && <span className="text-blue-600 font-bold text-sm">✓ Seleccionado</span>}
+            </div>
+            <p className="font-semibold text-gray-900">Secundaria / FP / Bachillerato</p>
+            <p className="text-sm text-gray-500 mt-1">30h totales/semana</p>
+            <div className="mt-3 space-y-1">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-700 font-medium">🎓 18h lectivas</span>
+                <span className="text-gray-400">(cómputo estándar)</span>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-amber-700 font-medium">📋 12h complementarias</span>
+                <span className="text-gray-400">(guardias, tutorías…)</span>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Máximo 20h lectivas con excepciones</p>
+            </div>
+          </button>
         </div>
       </Card>
 
