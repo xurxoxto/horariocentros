@@ -309,21 +309,26 @@ export const AssignmentsPage: React.FC = () => {
           <table className="min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-50">
               <tr>
-                {['Profesor', 'Asignatura', 'Grupo', ''].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
-                ))}
+                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Profesor</th>
+                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignatura</th>
+                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Grupo</th>
+                <th className="w-8"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {assignments.map(a => (
                 <tr key={a.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-5 py-3 text-sm font-medium text-gray-900">{getTeacherName(a.teacher_id)}</td>
-                  <td className="px-5 py-3 text-sm text-gray-600">
+                  <td className="px-3 py-2.5 w-32">
+                    <span className="block text-xs font-medium text-gray-900 truncate max-w-[7rem]" title={getTeacherName(a.teacher_id)}>
+                      {getTeacherName(a.teacher_id)}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2.5 text-sm text-gray-700">
                     {getSubjectName(a.subject_id)}
                     <span className="ml-1.5 text-xs text-gray-400 font-mono">({getSubjectCode(a.subject_id)})</span>
                   </td>
-                  <td className="px-5 py-3 text-sm text-gray-600">{getGroupName(a.group_id)}</td>
-                  <td className="px-5 py-3 text-right">
+                  <td className="px-3 py-2.5 text-sm font-medium text-gray-700 w-24">{getGroupName(a.group_id)}</td>
+                  <td className="px-2 py-2.5 text-right w-8">
                     <button
                       onClick={() => handleDelete(a.id!)}
                       className="text-gray-300 hover:text-red-500 transition-colors p-1 rounded"

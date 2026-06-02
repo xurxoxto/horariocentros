@@ -27,7 +27,7 @@ export interface Teacher {
 export interface Subject {
   id: string;
   name: string;
-  code: string;
+  code?: string;
   hours_per_week: number;
   requires_lab: boolean;
   excluded_room_ids: string[];

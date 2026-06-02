@@ -32,12 +32,26 @@ subjects_router = APIRouter()
 async def create_subject(subject_data: SubjectCreate):
     """Crear una nueva asignatura."""
     subject_id = generate_id()
+
+    # Auto-generate code from name if not provided
+    if not subject_data.code:
+        import re
+        base = re.sub(r'[^a-zA-Z0-9]', '', subject_data.name.upper())[:8] or 'ASIG'
+        # Ensure uniqueness by appending a number if needed
+        existing_codes = {s.code for s in store.list_subjects()}
+        code = base
+        counter = 2
+        while code in existing_codes:
+            code = f"{base[:6]}{counter}"
+            counter += 1
+    else:
+        code = subject_data.code
     
     try:
         subject = Subject(
             id=subject_id,
             name=subject_data.name,
-            code=subject_data.code,
+            code=code,
             hours_per_week=subject_data.hours_per_week,
             requires_lab=subject_data.requires_lab
         )
@@ -165,7 +179,7 @@ async def create_group(group_data: GroupCreate):
 @groups_router.get("", response_model=List[GroupResponse])
 async def list_groups(skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=1000)):
     """Listar todos los grupos."""
-    groups_list = store.list_groups()[skip:skip + limit]
+    groups_list = sorted(store.list_groups(), key=lambda g: g.name)[skip:skip + limit]
     return [
         GroupResponse(
             id=g.id,

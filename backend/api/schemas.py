@@ -82,8 +82,8 @@ class TeacherResponse(BaseModel):
 class SubjectCreate(BaseModel):
     """Schema para crear una asignatura."""
     name: str = Field(..., min_length=1, max_length=255, description="Nombre de la asignatura")
-    code: str = Field(..., min_length=1, max_length=50, description="Código único")
-    hours_per_week: int = Field(..., ge=1, description="Horas semanales")
+    code: Optional[str] = Field(None, min_length=1, max_length=50, description="Código único (auto-generado si no se indica)")
+    hours_per_week: int = Field(3, ge=1, description="Horas semanales")
     requires_lab: bool = Field(False, description="¿Requiere laboratorio?")
     excluded_room_ids: List[UUID] = Field(default_factory=list, description="IDs de aulas donde NO puede impartirse")
 
