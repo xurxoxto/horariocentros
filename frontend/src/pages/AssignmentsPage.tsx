@@ -77,7 +77,7 @@ export const AssignmentsPage: React.FC = () => {
 
   const filteredTeachers = teachers.filter(t => t.name.toLowerCase().includes(searchTeacher.toLowerCase()));
   const filteredSubjects = subjects.filter(s =>
-    s.name.toLowerCase().includes(searchSubject.toLowerCase()) || s.code.toLowerCase().includes(searchSubject.toLowerCase())
+    s.name.toLowerCase().includes(searchSubject.toLowerCase()) || (s.code ?? '').toLowerCase().includes(searchSubject.toLowerCase())
   );
   const filteredGroups = groups.filter(g =>
     g.name.toLowerCase().includes(searchGroup.toLowerCase()) || g.level.toLowerCase().includes(searchGroup.toLowerCase())
@@ -109,7 +109,7 @@ export const AssignmentsPage: React.FC = () => {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Nueva Asignación</h3>
-            <p className="text-sm text-gray-500">Selecciona profesor/es, asignatura y grupo pulsando en las etiquetas.</p>
+            <p className="text-sm text-gray-500">Selecciona docente/s, asignatura y grupo pulsando en las etiquetas.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -118,7 +118,7 @@ export const AssignmentsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-semibold text-gray-700">
-                  👨‍🏫 Profesores <span className="text-red-500">*</span>
+                  🧑‍🏫 Profesorado <span className="text-red-500">*</span>
                   {formData.teacher_ids.length > 0 && (
                     <span className="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-xs font-normal">
                       {formData.teacher_ids.length} seleccionado{formData.teacher_ids.length > 1 ? 's' : ''}
@@ -137,13 +137,13 @@ export const AssignmentsPage: React.FC = () => {
                   type="text"
                   value={searchTeacher}
                   onChange={e => setSearchTeacher(e.target.value)}
-                  placeholder="Buscar profesor..."
+                  placeholder="Buscar docente..."
                   className="w-full px-3 py-1.5 text-sm bg-gray-50 border border-gray-200 rounded-lg mb-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               )}
               <div className="flex flex-wrap gap-2">
                 {filteredTeachers.length === 0 ? (
-                  <p className="text-sm text-gray-400">No hay profesores disponibles</p>
+                  <p className="text-sm text-gray-400">No hay docentes disponibles</p>
                 ) : filteredTeachers.map(t => {
                   const selected = formData.teacher_ids.includes(t.id!);
                   return (
@@ -276,7 +276,7 @@ export const AssignmentsPage: React.FC = () => {
             {canSubmit && (
               <div className="bg-gray-50 rounded-xl p-4 flex items-center justify-between">
                 <div className="text-sm text-gray-700 space-y-0.5">
-                  <p><span className="font-medium">Profesores:</span> {formData.teacher_ids.map(id => getTeacherName(id)).join(', ')}</p>
+                  <p><span className="font-medium">Profesorado:</span> {formData.teacher_ids.map(id => getTeacherName(id)).join(', ')}</p>
                   <p><span className="font-medium">Asignatura:</span> {getSubjectName(formData.subject_id)} <span className="text-gray-400 font-mono text-xs">({getSubjectCode(formData.subject_id)})</span></p>
                   <p><span className="font-medium">Grupo:</span> {getGroupName(formData.group_id)}</p>
                 </div>
@@ -290,7 +290,7 @@ export const AssignmentsPage: React.FC = () => {
             )}
             {!canSubmit && (
               <p className="text-sm text-gray-400 text-center py-2">
-                Selecciona al menos un profesor, una asignatura y un grupo para continuar
+                Selecciona al menos un/a docente, una asignatura y un grupo para continuar
               </p>
             )}
           </form>
@@ -303,13 +303,13 @@ export const AssignmentsPage: React.FC = () => {
           <div className="px-6 py-12 text-center text-gray-400">
             <p className="text-4xl mb-3">📋</p>
             <p className="font-medium text-gray-600">No hay asignaciones todavía</p>
-            <p className="text-sm mt-1">Crea la primera para relacionar profesores con asignaturas y grupos</p>
+            <p className="text-sm mt-1">Crea la primera para relacionar el profesorado con asignaturas y grupos</p>
           </div>
         ) : (
           <table className="min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Profesor</th>
+                <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Docente</th>
                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Asignatura</th>
                 <th className="px-3 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Grupo</th>
                 <th className="w-8"></th>
@@ -348,7 +348,7 @@ export const AssignmentsPage: React.FC = () => {
 
       {assignments.length > 0 && (
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm text-blue-800">
-          <span className="font-semibold">💡 Co-docencia:</span> Selecciona varios profesores al crear una asignación y luego añade una restricción "Deben coincidir" en la sección de Restricciones.
+          <span className="font-semibold">💡 Co-docencia:</span> Selecciona varias personas del profesorado al crear una asignación y luego añade una restricción "Deben coincidir" en la sección de Restricciones.
         </div>
       )}
     </div>

@@ -84,7 +84,7 @@ export const ConstraintsPage: React.FC = () => {
     const entityName = getEntityName(formData.entity_id, formData.entity_type);
     
     if (formData.type === 'unavailable') {
-      description = `${formData.entity_type === 'teacher' ? 'Profesor' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'} ${entityName} no disponible ${days[formData.day]} a las ${formData.hour}:00`;
+      description = `${formData.entity_type === 'teacher' ? 'Docente' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'} ${entityName} no disponible ${days[formData.day]} a las ${formData.hour}:00`;
     } else if (formData.type === 'must_coincide') {
       const assignment1 = getAssignmentDescription(formData.assignment_id);
       const assignment2 = getAssignmentDescription(formData.related_assignment_id);
@@ -203,7 +203,7 @@ export const ConstraintsPage: React.FC = () => {
                 })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="unavailable">🚫 No disponible (profesor/grupo/aula)</option>
+                <option value="unavailable">🚫 No disponible (docente/grupo/aula)</option>
                 <option value="must_coincide">🔗 Deben coincidir (mismo día y hora)</option>
                 <option value="same_day">📅 Mismo día (diferente hora)</option>
                 <option value="only_at_hours">⏰ Solo en horas específicas</option>
@@ -224,7 +224,7 @@ export const ConstraintsPage: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, entity_type: e.target.value as any, entity_id: '' })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="teacher">Profesor</option>
+                    <option value="teacher">Docente</option>
                     <option value="group">Grupo</option>
                     <option value="room">Aula</option>
                   </select>
@@ -232,7 +232,7 @@ export const ConstraintsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Seleccionar {formData.entity_type === 'teacher' ? 'Profesor' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'}
+                    Seleccionar {formData.entity_type === 'teacher' ? 'Docente' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'}
                     {' '}<span className="text-red-500">*</span>
                   </label>
                   <select
@@ -294,7 +294,7 @@ export const ConstraintsPage: React.FC = () => {
               <>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Profesor <span className="text-red-500">*</span>
+                    Docente <span className="text-red-500">*</span>
                   </label>
                   <select
                     required
@@ -302,7 +302,7 @@ export const ConstraintsPage: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, entity_id: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Seleccionar profesor...</option>
+                    <option value="">Seleccionar docente...</option>
                     {teachers.map((t) => (
                       <option key={t.id} value={t.id}>{t.name}</option>
                     ))}
@@ -469,8 +469,8 @@ export const ConstraintsPage: React.FC = () => {
           <div className="flex items-start">
             <span className="mr-2">🚫</span>
             <div>
-              <strong>No disponible:</strong> Marca que un profesor, grupo o aula no está disponible en un día/hora específico.
-              <br /><em className="text-xs text-blue-700">Ejemplo: Profesor no viene los lunes a 1ª hora</em>
+              <strong>No disponible:</strong> Marca que un/a docente, grupo o aula no está disponible en un día/hora específico.
+              <br /><em className="text-xs text-blue-700">Ejemplo: Docente no viene los lunes a 1ª hora</em>
             </div>
           </div>
           <div className="flex items-start">
@@ -504,8 +504,8 @@ export const ConstraintsPage: React.FC = () => {
           <div className="flex items-start">
             <span className="mr-2">☕</span>
             <div>
-              <strong>Guardia de recreo:</strong> Un profesor no tendrá guardia de recreo los días que tenga 5 clases completas.
-              <br /><em className="text-xs text-blue-700">Ejemplo: Profesor con jornada completa de 8:00 a 14:00 sin huecos</em>
+              <strong>Guardia de recreo:</strong> Un/a docente no tendrá guardia de recreo los días que tenga 5 clases completas.
+              <br /><em className="text-xs text-blue-700">Ejemplo: Docente con jornada completa de 8:00 a 14:00 sin huecos</em>
             </div>
           </div>
         </div>

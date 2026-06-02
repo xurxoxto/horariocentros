@@ -63,7 +63,7 @@ export const TeachersPage: React.FC = () => {
         return makeInitialFormData(config);
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar profesores');
+      setError(err instanceof Error ? err.message : 'Error al cargar el profesorado');
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ export const TeachersPage: React.FC = () => {
       setActiveTab('basic');
       loadTeachers();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al guardar profesor');
+      alert(err instanceof Error ? err.message : 'Error al guardar docente');
     }
   };
 
@@ -112,12 +112,12 @@ export const TeachersPage: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de eliminar este profesor?')) return;
+    if (!confirm('¿Eliminar esta persona del profesorado?')) return;
     try {
       await deleteTeacher(id);
       loadTeachers();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al eliminar profesor');
+      alert(err instanceof Error ? err.message : 'Error al eliminar del profesorado');
     }
   };
 
@@ -146,7 +146,7 @@ export const TeachersPage: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <p className="text-gray-500">
-            {teachers.length} profesor{teachers.length !== 1 ? 'es' : ''} registrado{teachers.length !== 1 ? 's' : ''}
+            {teachers.length} docente{teachers.length !== 1 ? 's' : ''} registrado{teachers.length !== 1 ? 's' : ''}
           </p>
         </div>
         <Button
@@ -154,7 +154,7 @@ export const TeachersPage: React.FC = () => {
           variant={showForm ? 'secondary' : 'primary'}
           icon={showForm ? '✕' : '➕'}
         >
-          {showForm ? 'Cancelar' : 'Nuevo Profesor'}
+          {showForm ? 'Cancelar' : 'Añadir docente'}
         </Button>
       </div>
 
@@ -167,7 +167,7 @@ export const TeachersPage: React.FC = () => {
               Jornada del centro: {centerConfig.periods_per_day} sesiones/día · {centerConfig.total_weekly_hours}h semanales · {centerConfig.teaching_hours_per_week}h lectivas
             </p>
             <p className="text-xs text-blue-600">
-              {centerConfig.total_weekly_hours - centerConfig.teaching_hours_per_week}h complementarias disponibles por profesor (guardias, apoyos, coordinación...)
+              {centerConfig.total_weekly_hours - centerConfig.teaching_hours_per_week}h complementarias disponibles por docente (guardias, apoyos, coordinación...)
             </p>
           </div>
         </div>
@@ -183,7 +183,7 @@ export const TeachersPage: React.FC = () => {
             <Card className="border-0 shadow-none">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {editingTeacher ? `✏️ Editar: ${editingTeacher.name}` : '👤 Nuevo Profesor'}
+                  {editingTeacher ? `✏️ Editar: ${editingTeacher.name}` : '🧑‍💼 Añadir docente'}
                 </h3>
                 <div className="flex items-center space-x-2">
                   {centerConfig && (
@@ -345,7 +345,7 @@ export const TeachersPage: React.FC = () => {
                     <p className="text-sm font-medium text-amber-900">Las guardias y apoyos son provisionales</p>
                     <p className="text-xs text-amber-700 mt-1">
                       No es necesario definirlos ahora. Puedes dejarlos a 0 y modificarlos más adelante en cualquier momento 
-                      pulsando el botón de editar en la ficha del profesor.
+                      pulsando el botón de editar en la ficha de cada docente.
                     </p>
                   </div>
                 </div>
@@ -522,7 +522,7 @@ export const TeachersPage: React.FC = () => {
                   </Button>
                 ) : (
                   <Button type="submit" variant="success" icon="✓">
-                    {editingTeacher ? 'Actualizar Profesor' : 'Guardar Profesor'}
+                    {editingTeacher ? 'Actualizar' : 'Guardar docente'}
                   </Button>
                 )}
               </div>
@@ -537,12 +537,12 @@ export const TeachersPage: React.FC = () => {
       {teachers.length === 0 ? (
         <Card>
           <EmptyState
-            icon="👨‍🏫"
-            title="No hay profesores"
-            description="Añade profesores para comenzar a configurar los horarios del centro."
+            icon="🧑‍🏫"
+            title="No hay docentes"
+            description="Añade personal docente para comenzar a configurar los horarios del centro."
             action={
               <Button onClick={() => setShowForm(true)} icon="➕">
-                Añadir primer profesor
+                Añadir docente
               </Button>
             }
           />

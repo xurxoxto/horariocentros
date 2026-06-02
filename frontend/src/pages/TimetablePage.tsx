@@ -123,7 +123,7 @@ export const TimetablePage: React.FC = () => {
             <h3 className="text-lg font-semibold">Clases ({schedule.lessons.length})</h3>
             {schedule.lessons.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
-                No se generaron clases. Verifica que existan profesores, asignaturas, grupos, aulas y franjas horarias.
+                No se generaron clases. Verifica que existan docentes, asignaturas, grupos, aulas y franjas horarias.
               </p>
             ) : (
               <div className="overflow-x-auto">
@@ -133,7 +133,7 @@ export const TimetablePage: React.FC = () => {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Día</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hora</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Asignatura</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Profesor</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Docente</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Grupo</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aula</th>
                     </tr>

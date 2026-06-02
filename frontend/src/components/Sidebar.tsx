@@ -25,7 +25,7 @@ const navigation: NavSection[] = [
     title: 'Datos Base',
     icon: '📋',
     items: [
-      { name: 'Profesores', path: '/teachers', icon: '👨‍🏫' },
+      { name: 'Profesorado', path: '/teachers', icon: '🧑‍🏫' },
       { name: 'Asignaturas', path: '/subjects', icon: '📚' },
       { name: 'Grupos', path: '/groups', icon: '👥' },
       { name: 'Aulas', path: '/rooms', icon: '🚪' },
@@ -48,7 +48,7 @@ const navigation: NavSection[] = [
     ],
   },
   {
-    title: 'Integracións',
+    title: 'Integraciones',
     icon: '🔗',
     items: [
       { name: 'XADE', path: '/xade', icon: '🏛️' },

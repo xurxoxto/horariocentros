@@ -68,7 +68,7 @@ export const CodocenciaPage: React.FC = () => {
 
   const handleCreateAssignments = async () => {
     if (selectedTeachers.length === 0 || selectedSubjects.length === 0 || selectedGroups.length === 0) {
-      setError('Debes seleccionar al menos un profesor, una asignatura y un grupo');
+      setError('Debes seleccionar al menos un/a docente, una asignatura y un grupo');
       return;
     }
 
@@ -122,7 +122,7 @@ export const CodocenciaPage: React.FC = () => {
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-2">Co-docencia</h1>
       <p className="text-gray-600 mb-6">
-        Asigna múltiples profesores, asignaturas y grupos de forma simultánea
+        Asigna múltiples docentes, asignaturas y grupos de forma simultánea
       </p>
 
       {error && <ErrorMessage message={error} onRetry={() => setError(null)} />}
@@ -131,7 +131,7 @@ export const CodocenciaPage: React.FC = () => {
         {/* Profesores */}
         <div className="bg-white rounded-lg shadow p-4">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="font-semibold text-gray-900">👨‍🏫 Profesores</h3>
+            <h3 className="font-semibold text-gray-900">🧑‍🏫 Profesorado</h3>
             <button
               onClick={() => handleSelectAll('teachers')}
               className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200"
@@ -236,7 +236,7 @@ export const CodocenciaPage: React.FC = () => {
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-600">{selectedTeachers.length}</div>
-            <p className="text-sm text-gray-600">Profesores</p>
+            <p className="text-sm text-gray-600">Profesorado</p>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-green-600">×</div>
@@ -274,7 +274,7 @@ export const CodocenciaPage: React.FC = () => {
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-semibold text-blue-900 mb-2">💡 Cómo usar:</h4>
         <ol className="text-sm text-blue-800 space-y-1 ml-4 list-decimal">
-          <li>Selecciona los profesores que impartirán las clases</li>
+          <li>Selecciona el profesorado que impartirá las clases</li>
           <li>Selecciona las asignaturas que quieres asignar</li>
           <li>Selecciona los grupos a los que impartir</li>
           <li>El sistema crea todas las combinaciones automáticamente</li>

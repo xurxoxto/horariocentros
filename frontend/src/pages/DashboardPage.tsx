@@ -19,7 +19,7 @@ interface SetupStep {
 const setupSteps: SetupStep[] = [
   {
     id: 'teachers',
-    title: 'Profesores',
+    title: 'Profesorado',
     description: 'Añade el profesorado del centro',
     icon: '👨‍🏫',
     path: '/teachers',
@@ -252,7 +252,7 @@ export const DashboardPage: React.FC = () => {
             <p className={isReadyToGenerate ? 'text-green-100' : 'text-gray-500'}>
               {isReadyToGenerate
                 ? 'Ya tienes todos los datos necesarios para generar el horario automáticamente.'
-                : 'Necesitas completar al menos los profesores, asignaturas, grupos y aulas.'}
+                : 'Necesitas completar al menos el profesorado, asignaturas, grupos y aulas.'}
             </p>
           </div>
           
@@ -276,7 +276,7 @@ export const DashboardPage: React.FC = () => {
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
           <div className="text-3xl mb-2">👨‍🏫</div>
           <div className="text-2xl font-bold text-gray-800">{health.entities.teachers}</div>
-          <div className="text-sm text-gray-500">Profesores</div>
+          <div className="text-sm text-gray-500">Docentes</div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center">
           <div className="text-3xl mb-2">📚</div>

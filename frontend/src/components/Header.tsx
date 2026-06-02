@@ -3,11 +3,11 @@ import { useLocation, Link } from 'react-router-dom';
 
 const pageInfo: Record<string, { title: string; description: string; breadcrumb: string[] }> = {
   '/': { title: 'Inicio', description: 'Panel de control y estado del sistema', breadcrumb: [] },
-  '/teachers': { title: 'Profesores', description: 'Gestiona el profesorado y sus disponibilidades', breadcrumb: ['Datos Base', 'Profesores'] },
+  '/teachers': { title: 'Profesorado', description: 'Gestiona el profesorado y sus disponibilidades', breadcrumb: ['Datos Base', 'Profesorado'] },
   '/subjects': { title: 'Asignaturas', description: 'Define las materias y sus requisitos', breadcrumb: ['Datos Base', 'Asignaturas'] },
   '/groups': { title: 'Grupos', description: 'Configura los grupos de alumnos', breadcrumb: ['Datos Base', 'Grupos'] },
   '/rooms': { title: 'Aulas', description: 'Administra los espacios disponibles', breadcrumb: ['Datos Base', 'Aulas'] },
-  '/assignments': { title: 'Asignaciones', description: 'Vincula profesores, asignaturas y grupos (incluye co-docencia)', breadcrumb: ['Configuración', 'Asignaciones'] },
+  '/assignments': { title: 'Asignaciones', description: 'Vincula el profesorado con asignaturas y grupos (incluye co-docencia)', breadcrumb: ['Configuración', 'Asignaciones'] },
   '/constraints': { title: 'Restricciones', description: 'Define reglas y limitaciones del horario', breadcrumb: ['Configuración', 'Restricciones'] },
   '/timetable': { title: 'Generar Horario', description: 'Crea y optimiza los horarios automáticamente', breadcrumb: ['Horarios', 'Generar'] },
   '/reports': { title: 'Reportes', description: 'Visualiza y exporta los horarios generados', breadcrumb: ['Horarios', 'Reportes'] },

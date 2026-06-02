@@ -90,7 +90,7 @@ export const ReportsPage: React.FC = () => {
                 <th>Día</th>
                 <th>Hora</th>
                 <th>Asignatura</th>
-                <th>Profesor</th>
+                <th>Docente</th>
                 <th>Grupo</th>
                 <th>Aula</th>
             </tr>
@@ -125,7 +125,7 @@ export const ReportsPage: React.FC = () => {
 
   const generateCSV = () => {
     const lines = [
-      'Día,Hora,Asignatura,Profesor,Grupo,Aula',
+      'Día,Hora,Asignatura,Docente,Grupo,Aula',
       ...lessons.map(lesson => [
         days[Number(lesson.day) || 0] || 'Desconocido',
         `${String(lesson.start_hour || 0).padStart(2, '0')}:${String(lesson.start_minute || 0).padStart(2, '0')}`,
@@ -163,7 +163,7 @@ export const ReportsPage: React.FC = () => {
 
   const getFilterDescription = () => {
     if (filterType === 'teacher' && filterId) {
-      return `Profesor: ${teachers.find(t => t.id === filterId)?.name || filterId}`;
+      return `Docente: ${teachers.find(t => t.id === filterId)?.name || filterId}`;
     } else if (filterType === 'group' && filterId) {
       return `Grupo: ${groups.find(g => g.id === filterId)?.name || filterId}`;
     } else if (filterType === 'room' && filterId) {
@@ -177,7 +177,7 @@ export const ReportsPage: React.FC = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-2">📊 Reportes y Exportación</h1>
-      <p className="text-gray-600 mb-6">Genera reportes de horarios filtrados por profesor, grupo, aula, etc.</p>
+      <p className="text-gray-600 mb-6">Genera reportes de horarios filtrados por docente, grupo, aula, etc.</p>
 
       {error && <ErrorMessage message={error} onRetry={loadData} />}
 
@@ -217,7 +217,7 @@ export const ReportsPage: React.FC = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-blue-500"
               >
                 <option value="all">Todos (Horario completo)</option>
-                <option value="teacher">Por Profesor</option>
+                <option value="teacher">Por Docente</option>
                 <option value="group">Por Grupo</option>
                 <option value="room">Por Aula</option>
               </select>
@@ -283,7 +283,7 @@ export const ReportsPage: React.FC = () => {
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Día</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Hora</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Asignatura</th>
-                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Profesor</th>
+                        <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Docente</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Grupo</th>
                         <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aula</th>
                       </tr>
