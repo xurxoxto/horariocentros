@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useConfirm } from '../components/ConfirmModal';
-import { getTeachers, getGroups, getRooms, getSubjects, getAssignments } from '../services/api';
+import { getTeachers, getGroups, getRooms, getSubjects, getAssignments, getCenterConfig } from '../services/api';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { ErrorMessage } from '../components/ErrorMessage';
-import type { Teacher, Group, Room, Subject, SubjectAssignment } from '../types';
+import type { Teacher, Group, Room, Subject, SubjectAssignment, CenterConfig } from '../types';
 
 interface Constraint {
   id: string;
@@ -12,7 +12,7 @@ interface Constraint {
   entity_id?: string;
   entity_type?: 'teacher' | 'group' | 'room';
   day?: number;
-  hour?: number;
+  period?: number; // 1-based session, 0 = all day
   related_assignment_id?: string;
   allowed_hours?: number[];
 }
@@ -25,6 +25,7 @@ export const ConstraintsPage: React.FC = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [assignments, setAssignments] = useState<SubjectAssignment[]>([]);
+  const [centerConfig, setCenterConfig] = useState<CenterConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -33,7 +34,7 @@ export const ConstraintsPage: React.FC = () => {
     entity_type: 'teacher' | 'group' | 'room';
     entity_id: string;
     day: number;
-    hour: number;
+    period: number; // 1-based, 0 = all day
     assignment_id: string;
     related_assignment_id: string;
     allowed_hours: number[];
@@ -42,31 +43,35 @@ export const ConstraintsPage: React.FC = () => {
     entity_type: 'teacher',
     entity_id: '',
     day: 0,
-    hour: 8,
+    period: 0,
     assignment_id: '',
     related_assignment_id: '',
     allowed_hours: [],
   });
 
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
-  const hours = Array.from({ length: 8 }, (_, i) => i + 8); // 8:00 - 15:00
+  const periodsPerDay = centerConfig?.periods_per_day ?? 6;
+  const periods = Array.from({ length: periodsPerDay }, (_, i) => i + 1); // 1-based sessions
+  const ordinal = (n: number) => `${n}ª`;
 
   const loadData = async () => {
     try {
       setLoading(true);
       setError(null);
-      const [teachersData, groupsData, roomsData, subjectsData, assignmentsData] = await Promise.all([
+      const [teachersData, groupsData, roomsData, subjectsData, assignmentsData, config] = await Promise.all([
         getTeachers(),
         getGroups(),
         getRooms(),
         getSubjects(),
         getAssignments(),
+        getCenterConfig().catch(() => null),
       ]);
       setTeachers(teachersData);
       setGroups(groupsData);
       setRooms(roomsData);
       setSubjects(subjectsData);
       setAssignments(assignmentsData);
+      setCenterConfig(config);
       setConstraints([]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar datos');
@@ -86,7 +91,8 @@ export const ConstraintsPage: React.FC = () => {
     const entityName = getEntityName(formData.entity_id, formData.entity_type);
     
     if (formData.type === 'unavailable') {
-      description = `${formData.entity_type === 'teacher' ? 'Docente' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'} ${entityName} no disponible ${days[formData.day]} a las ${formData.hour}:00`;
+      const periodLabel = formData.period === 0 ? 'todo el día' : `${ordinal(formData.period)} sesión`;
+      description = `${formData.entity_type === 'teacher' ? 'Docente' : formData.entity_type === 'group' ? 'Grupo' : 'Aula'} ${entityName} — no disponible el ${days[formData.day]}, ${periodLabel}`;
     } else if (formData.type === 'must_coincide') {
       const assignment1 = getAssignmentDescription(formData.assignment_id);
       const assignment2 = getAssignmentDescription(formData.related_assignment_id);
@@ -115,7 +121,7 @@ export const ConstraintsPage: React.FC = () => {
       entity_id: formData.entity_id,
       entity_type: formData.entity_type,
       day: formData.day,
-      hour: formData.hour,
+      period: formData.period,
       related_assignment_id: formData.related_assignment_id,
       allowed_hours: [...formData.allowed_hours],
     };
@@ -127,7 +133,7 @@ export const ConstraintsPage: React.FC = () => {
       entity_type: 'teacher',
       entity_id: '',
       day: 0,
-      hour: 8,
+      period: 0,
       assignment_id: '',
       related_assignment_id: '',
       allowed_hours: [],
@@ -276,16 +282,17 @@ export const ConstraintsPage: React.FC = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Hora <span className="text-red-500">*</span>
+                      Sesión <span className="text-red-500">*</span>
                     </label>
                     <select
                       required
-                      value={formData.hour}
-                      onChange={(e) => setFormData({ ...formData, hour: parseInt(e.target.value) })}
+                      value={formData.period}
+                      onChange={(e) => setFormData({ ...formData, period: parseInt(e.target.value) })}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      {hours.map((hour) => (
-                        <option key={hour} value={hour}>{hour}:00</option>
+                      <option value={0}>📅 Todo el día</option>
+                      {periods.map((p) => (
+                        <option key={p} value={p}>{ordinal(p)} sesión</option>
                       ))}
                     </select>
                   </div>
@@ -384,21 +391,21 @@ export const ConstraintsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Horas permitidas (selecciona múltiples) <span className="text-red-500">*</span>
+                    Sesiones permitidas (selecciona múltiples) <span className="text-red-500">*</span>
                   </label>
                   <div className="grid grid-cols-4 gap-2">
-                    {hours.map((hour) => (
+                    {periods.map((p) => (
                       <button
-                        key={hour}
+                        key={p}
                         type="button"
-                        onClick={() => toggleHour(hour)}
+                        onClick={() => toggleHour(p)}
                         className={`px-3 py-2 rounded-lg border-2 transition-colors ${
-                          formData.allowed_hours.includes(hour)
+                          formData.allowed_hours.includes(p)
                             ? 'bg-blue-600 text-white border-blue-600'
                             : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
                         }`}
                       >
-                        {hour}:00
+                        {ordinal(p)} ses.
                       </button>
                     ))}
                   </div>

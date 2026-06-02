@@ -17,8 +17,6 @@ const FREE_HOUR_PREFERENCE_LABELS: Record<FreeHourPreference, string> = {
   'specific_hours': 'Horas específicas',
 };
 
-const HOURS_OF_DAY = [1, 2, 3, 4, 5, 6, 7];
-
 const HOUR_TYPES = [
   { key: 'guard_hours', label: 'Guardias', icon: '🛡️', color: 'bg-sky-500', lightColor: 'bg-sky-100 text-sky-800', max: 10 },
   { key: 'break_guard_hours', label: 'Guardias recreo', icon: '☕', color: 'bg-amber-500', lightColor: 'bg-amber-100 text-amber-800', max: 5 },
@@ -53,6 +51,16 @@ export const TeachersPage: React.FC = () => {
   const [formData, setFormData] = useState(() => makeInitialFormData());
   const [activeTab, setActiveTab] = useState<'basic' | 'hours' | 'preferences'>('basic');
   const [centerConfig, setCenterConfig] = useState<CenterConfig | null>(null);
+  const [isBulkUpdating, setIsBulkUpdating] = useState(false);
+
+  const periodsPerDay = centerConfig?.periods_per_day ?? 7;
+  const sessionList = Array.from({ length: periodsPerDay }, (_, i) => i + 1);
+
+  const tabs = [
+    { id: 'basic', label: 'Datos básicos', icon: '👤' },
+    { id: 'hours', label: 'Distribución de horas', icon: '⏰' },
+    { id: 'preferences', label: 'Preferencias', icon: '⚙️' },
+  ];
 
   const loadTeachers = async () => {
     try {
@@ -137,11 +145,33 @@ export const TeachersPage: React.FC = () => {
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} onRetry={loadTeachers} />;
 
-  const tabs = [
-    { id: 'basic', label: 'Datos básicos', icon: '👤' },
-    { id: 'hours', label: 'Distribución de horas', icon: '⏰' },
-    { id: 'preferences', label: 'Preferencias', icon: '⚙️' },
-  ];
+  const bulkSetSupportHours = async (hours: number) => {
+    if (teachers.length === 0) return;
+    const ok = await confirm({
+      title: `Asignar ${hours}h apoyo a todos`,
+      message: `¿Asignar ${hours}h de apoyo/semana a los ${teachers.length} docentes? Se sobreescribirá el valor actual de cada uno.`,
+      confirmLabel: 'Asignar',
+    });
+    if (!ok) return;
+    setIsBulkUpdating(true);
+    try {
+      await Promise.all(teachers.map(t => updateTeacher(t.id!, { ...t, support_hours: hours })));
+      await loadTeachers();
+      toast(`✅ ${hours}h de apoyo asignadas a ${teachers.length} docentes`, 'success');
+    } catch {
+      toast('Error al actualizar docentes', 'error');
+    } finally {
+      setIsBulkUpdating(false);
+    }
+  };
+
+  const autoDistributeHours = () => {
+    if (!centerConfig) return;
+    const complementary = centerConfig.total_weekly_hours - (formData.max_hours_per_week || centerConfig.teaching_hours_per_week);
+    const guardH = Math.floor(complementary / 2);
+    const supportH = complementary - guardH;
+    setFormData({ ...formData, guard_hours: guardH, support_hours: supportH, break_guard_hours: 0, coordination_hours: 0, management_hours: 0 });
+  };
 
   const totalNonTeaching = formData.guard_hours + formData.break_guard_hours + formData.support_hours + formData.coordination_hours + formData.management_hours;
   const totalHoursLabel = centerConfig ? `${centerConfig.total_weekly_hours}h semanales (jornada del centro)` : `${formData.max_hours_per_week}h semanales`;
@@ -166,16 +196,34 @@ export const TeachersPage: React.FC = () => {
 
       {/* Center config info banner */}
       {centerConfig && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center">
-          <span className="text-xl mr-3">🏫</span>
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start md:items-center flex-col md:flex-row gap-3">
+          <span className="text-xl mr-0 md:mr-3">🏫</span>
           <div className="flex-1">
             <p className="text-sm font-medium text-blue-900">
-              Jornada del centro: {centerConfig.periods_per_day} sesiones/día · {centerConfig.total_weekly_hours}h semanales · {centerConfig.teaching_hours_per_week}h lectivas
+              Jornada del centro: {centerConfig.periods_per_day} sesiones/día &middot; {centerConfig.total_weekly_hours}h semanales &middot; {centerConfig.teaching_hours_per_week}h lectivas
             </p>
             <p className="text-xs text-blue-600">
               {centerConfig.total_weekly_hours - centerConfig.teaching_hours_per_week}h complementarias disponibles por docente (guardias, apoyos, coordinación...)
             </p>
           </div>
+          {/* Quick bulk actions */}
+          {teachers.length > 0 && (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs text-blue-500 hidden md:block">Acc. rápidas:</span>
+              {[1, 2, 3].map(h => (
+                <button
+                  key={h}
+                  type="button"
+                  disabled={isBulkUpdating}
+                  onClick={() => bulkSetSupportHours(h)}
+                  className="text-xs px-2.5 py-1.5 bg-white border border-blue-300 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50"
+                  title={`Asignar ${h}h de apoyo a todos los docentes`}
+                >
+                  {isBulkUpdating ? '...' : `${h}h apoyo ↗`}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -347,13 +395,21 @@ export const TeachersPage: React.FC = () => {
                 {/* Info banner about provisional hours */}
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start">
                   <span className="text-lg mr-3 mt-0.5">💡</span>
-                  <div>
-                    <p className="text-sm font-medium text-amber-900">Las guardias y apoyos son provisionales</p>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-amber-900">Las guardias y apoyos son opcionales</p>
                     <p className="text-xs text-amber-700 mt-1">
-                      No es necesario definirlos ahora. Puedes dejarlos a 0 y modificarlos más adelante en cualquier momento 
-                      pulsando el botón de editar en la ficha de cada docente.
+                      Puedes dejarlos a 0 o usar el botón para repartir automáticamente las horas complementarias.
                     </p>
                   </div>
+                  {centerConfig && (
+                    <button
+                      type="button"
+                      onClick={autoDistributeHours}
+                      className="ml-3 text-xs px-3 py-1.5 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-lg transition-colors flex-shrink-0"
+                    >
+                      ⚡ Auto-repartir
+                    </button>
+                  )}
                 </div>
 
                 {/* All hours together */}
@@ -446,27 +502,28 @@ export const TeachersPage: React.FC = () => {
 
                 {formData.free_hour_preference === 'specific_hours' && (
                   <div className="bg-blue-50 rounded-lg p-4">
-                    <label className="block text-sm font-medium text-blue-800 mb-3">
-                      Selecciona las horas preferidas
+                    <label className="block text-sm font-medium text-blue-800 mb-1">
+                      Selecciona las sesiones preferidas
                     </label>
+                    <p className="text-xs text-blue-600 mb-3">Las sesiones libres se intentarán colocar en los periodos marcados.</p>
                     <div className="flex flex-wrap gap-2">
-                      {HOURS_OF_DAY.map((hour) => (
+                      {sessionList.map((s) => (
                         <button
-                          key={hour}
+                          key={s}
                           type="button"
                           onClick={() => {
-                            const newHours = formData.preferred_free_hours.includes(hour)
-                              ? formData.preferred_free_hours.filter(h => h !== hour)
-                              : [...formData.preferred_free_hours, hour];
+                            const newHours = formData.preferred_free_hours.includes(s)
+                              ? formData.preferred_free_hours.filter(h => h !== s)
+                              : [...formData.preferred_free_hours, s];
                             setFormData({ ...formData, preferred_free_hours: newHours });
                           }}
                           className={`w-12 h-12 rounded-lg font-medium transition-all ${
-                            formData.preferred_free_hours.includes(hour)
+                            formData.preferred_free_hours.includes(s)
                               ? 'bg-blue-600 text-white shadow-lg'
                               : 'bg-white text-gray-700 border border-gray-200 hover:border-blue-400'
                           }`}
                         >
-                          {hour}ª
+                          {s}ª
                         </button>
                       ))}
                     </div>
